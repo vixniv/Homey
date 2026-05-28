@@ -48,6 +48,7 @@ struct HomeView: View {
                 }
                 .scrollIndicators(.hidden)
             }
+            .padding()
             .navigationDestination(isPresented: $showAddTask) {
                 AddTaskView()
             }

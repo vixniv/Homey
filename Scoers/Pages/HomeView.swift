@@ -19,8 +19,6 @@ struct HomeView: View {
         TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .done, assigneeEmoji: "👱‍♀️")
     ]
 
-    @State private var showAddTask = false
-
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 20) {
@@ -42,16 +40,21 @@ struct HomeView: View {
                         }
                     }
 
-                    PrimaryButton(title: "+ Add task") {
-                        showAddTask = true
+                    NavigationLink {
+                        AddTaskView()
+                    } label: {
+                        Text("+ Add task")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color.appPrimary)
+                            .cornerRadius(12)
                     }
                 }
                 .scrollIndicators(.hidden)
             }
             .padding()
-            .navigationDestination(isPresented: $showAddTask) {
-                AddTaskView()
-            }
         }
     }
 }

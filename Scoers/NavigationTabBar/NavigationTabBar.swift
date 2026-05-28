@@ -15,7 +15,7 @@ struct NavigationTabBar: View {
             HStack(spacing: 0) {
                 TabItemView(value: "home", systemImage: "house", tabItem: .home, selection: $selectedTabItem)
                 
-                TabItemView(value: "tasks", systemImage: "checkmark.square", tabItem: .tasks, selection: $selectedTabItem)
+                TabItemView(value: "progress", systemImage: "chart.line.uptrend.xyaxis", tabItem: .progress, selection: $selectedTabItem)
                 
                 
                 TabItemView(value: "schedule", systemImage: "calendar", tabItem: .schedule, selection: $selectedTabItem)

@@ -68,3 +68,7 @@ struct SegmentedControl: View {
     SegmentedControl(selection: $selectedItem)
         .padding()
 }
+
+#Preview {
+    ContentView(selectedTabItem: .home)
+}

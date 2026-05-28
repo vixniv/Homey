@@ -46,3 +46,7 @@ struct MemberAvatarItem: View {
 #Preview {
     MemberAvatarItem(householdMember: HouseholdMemberModel(nickname: "Ana"))
 }
+
+#Preview {
+    ContentView(selectedTabItem: .home)
+}

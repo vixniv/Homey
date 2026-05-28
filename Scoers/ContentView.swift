@@ -14,8 +14,8 @@ struct ContentView: View {
             // page switch
             VStack {
                 switch(selectedTabItem) {
-                case .tasks:
-                    TasksView()
+                case .progress:
+                    ProgressView()
                 case .schedule:
                     ScheduleView()
                 case .profile:
@@ -25,6 +25,7 @@ struct ContentView: View {
                 }
             }
             .frame(height: .infinity)
+            .padding()
             
             Spacer()
             

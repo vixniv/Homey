@@ -16,10 +16,11 @@ struct HeaderTitle: View {
             VStack(alignment: .leading) {
                 // Family Title
                 Text("\(name.capitalized)'s Family")
-                    .font(.system(.title, weight: .semibold))
+                    .font(.system(.headline, weight: .semibold))
                 
                 // Today's date
                 Text(date.formatted(date: .abbreviated, time: .omitted))
+                    .font(.subheadline)
             }
             
             Spacer()
@@ -30,7 +31,7 @@ struct HeaderTitle: View {
                 
             } label: {
                 Image(systemName: "bell")
-                    .font(.title)
+                    .font(.system(.title2, weight: .regular))
                     .foregroundStyle(.black)
             }
         }
@@ -40,4 +41,8 @@ struct HeaderTitle: View {
 #Preview {
     HeaderTitle(name: "ana")
         .padding() //added padding to preview to easily see
+}
+
+#Preview {
+    ContentView(selectedTabItem: .home)
 }

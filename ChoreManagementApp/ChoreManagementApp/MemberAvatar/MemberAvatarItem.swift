@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MemberAvatarItem: View {
-    var member: any MemberAvatarProtocol
+    var householdMember: HouseholdMemberModel
     var highlighted = false
     var body: some View {
         VStack {
@@ -21,7 +21,7 @@ struct MemberAvatarItem: View {
                         .shadow(radius: 15)
                 }
                 
-                if let imageURL = member.imageURL {
+                if let imageURL = householdMember.imageURL {
                     // TODO: load image if imageURL is valid
                 } else {
                     Image("EmptyProfileImage")
@@ -35,14 +35,14 @@ struct MemberAvatarItem: View {
             
             //Text
             VStack {
-                Text(member.nickname)
+                Text(householdMember.nickname)
                     .foregroundStyle(.secondary)
-                Text("^[\(member.getNumberOfTask()) task](inflect: true)")
+                Text("^[\(householdMember.getNumberOfTask()) task](inflect: true)")
             }
         }
     }
 }
 
 #Preview {
-    MemberAvatarItem(member: MockMember(nickname: "Ana"))
+    MemberAvatarItem(householdMember: HouseholdMemberModel(nickname: "Ana"))
 }

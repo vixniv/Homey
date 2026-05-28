@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MockMember: MemberAvatarProtocol {
+struct HouseholdMemberModel : Identifiable {
     let id: UUID = UUID()
     var nickname: String
     var imageURL: URL?
@@ -16,15 +16,15 @@ struct MockMember: MemberAvatarProtocol {
     }
     
     // mock members
-    static let mockMembers: [MockMember] = [
-        MockMember(nickname: "Ana"),
-        MockMember(nickname: "Adi"),
-        MockMember(nickname: "Ama"),
-        MockMember(nickname: "Dad")
+    static let mockMembers: [HouseholdMemberModel] = [
+        HouseholdMemberModel(nickname: "Ana"),
+        HouseholdMemberModel(nickname: "Adi"),
+        HouseholdMemberModel(nickname: "Ama"),
+        HouseholdMemberModel(nickname: "Dad")
     ]
     
     // mock user
-    static var mockUser: MockMember {
+    static var mockUser: HouseholdMemberModel {
         mockMembers[0]
     }
 }

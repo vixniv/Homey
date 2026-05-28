@@ -7,21 +7,24 @@
 
 import SwiftUI
 
-struct MemberAvatarsList<Member: MemberAvatarProtocol>: View {
-    var user: Member // current user
-    var members: [Member] // all family members
+struct MemberAvatarsList: View {
+    var user: HouseholdMemberModel // current user
+    var householdMembers: [HouseholdMemberModel] // all family members
+    var showDivider = true
     var body: some View {
         HStack(spacing: 15) {
             // current user
-            MemberAvatarItem(member: user,
+            MemberAvatarItem(householdMember: user,
                              highlighted: true)
             
-            Divider()
+            if showDivider {
+                Divider()
+            }
             
             // all family members except the actual user
-            ForEach(members) { member in
+            ForEach(householdMembers) { member in
                 if member.id != user.id {
-                    MemberAvatarItem(member: member, highlighted: false)
+                    MemberAvatarItem(householdMember: member, highlighted: false)
                 }
             }
             
@@ -33,5 +36,5 @@ struct MemberAvatarsList<Member: MemberAvatarProtocol>: View {
 #Preview {
     
     
-    MemberAvatarsList(user: MockMember.mockUser, members: MockMember.mockMembers)
+    MemberAvatarsList(user: HouseholdMemberModel.mockUser, householdMembers: HouseholdMemberModel.mockMembers)
 }

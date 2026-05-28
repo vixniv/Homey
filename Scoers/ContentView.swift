@@ -8,14 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var selectedTabItem: TabItemEnum = .home
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            // page switch
+            VStack {
+                switch(selectedTabItem) {
+                case .tasks:
+                    TasksView()
+                case .schedule:
+                    ScheduleView()
+                case .profile:
+                    ProfileView()
+                default:
+                    HomeView()
+                }
+            }
+            .frame(height: .infinity)
+            
+            Spacer()
+            
+            NavigationTabBar(selectedTabItem: $selectedTabItem)
         }
-        .padding()
+        .ignoresSafeArea(.container, edges: .bottom)
     }
 }
 

@@ -13,11 +13,7 @@ struct HomeView: View {
     let householdMembers = HouseholdMemberModel.mockMembers
     @State var choreViewMode: ChoreViewMode = .all
 
-    @State private var tasks: [TaskItem] = [
-        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .available),
-        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .inProgress, assigneeEmoji: "👱‍♀️"),
-        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .done, assigneeEmoji: "👱‍♀️")
-    ]
+    @State private var tasksModel = TasksModel()
 
     var body: some View {
         NavigationStack {
@@ -34,14 +30,14 @@ struct HomeView: View {
                 SegmentedControl(selection: $choreViewMode)
 
                 ScrollView {
-                    ForEach($tasks) {$task in
+                    ForEach(tasksModel.tasks) { task in
                         TaskCard(task: task) {
 
                         }
                     }
 
                     NavigationLink {
-                        AddTaskView()
+                        AddTaskView(tasksModel: tasksModel)
                     } label: {
                         Text("+ Add task")
                             .font(.system(size: 16, weight: .regular))

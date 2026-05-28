@@ -13,11 +13,16 @@ struct HomeView: View {
     let householdMembers = HouseholdMemberModel.mockMembers
     @State var choreViewMode: ChoreViewMode = .all
 
-    @State private var tasks: [TaskItem] = [
-        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .available),
-        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .inProgress, assigneeEmoji: "👱‍♀️"),
-        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .done, assigneeEmoji: "👱‍♀️")
-    ]
+    @State private var tasksModel = TasksModel()
+
+    private var visibleTasks: [TaskItem] {
+        switch choreViewMode {
+        case .all:
+            return tasksModel.tasks
+        case .myself:
+            return tasksModel.tasks.filter { $0.assigneeId == user.id }
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -33,26 +38,32 @@ struct HomeView: View {
 
                 SegmentedControl(selection: $choreViewMode)
 
-                ScrollView {
-                    ForEach($tasks) {$task in
-                        TaskCard(task: task) {
-
-                        }
+                List {
+                    ForEach(visibleTasks) { task in
+                        TaskCard(task: task) { }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                            .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
                     }
-
-                    NavigationLink {
-                        AddTaskView()
-                    } label: {
-                        Text("+ Add task")
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(.black)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color.appPrimary)
-                            .cornerRadius(12)
+                    .onDelete { offsets in
+                        offsets.forEach { tasksModel.taskSwipedToDelete(visibleTasks[$0]) }
                     }
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)
+
+                NavigationLink {
+                    AddTaskView(tasksModel: tasksModel)
+                } label: {
+                    Text("+ Add task")
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color.appPrimary)
+                        .cornerRadius(12)
+                }
             }
             .padding()
         }

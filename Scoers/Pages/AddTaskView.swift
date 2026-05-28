@@ -8,6 +8,8 @@ import SwiftUI
 struct AddTaskView: View {
     @Environment(\.dismiss) private var dismiss
 
+    let tasksModel: TasksModel
+
     @State private var task: TaskModel = {
         var model = TaskModel()
         model.assigneeId = HouseholdMemberModel.mockUser.id
@@ -113,13 +115,13 @@ struct AddTaskView: View {
     }
 
     private func createTask() {
-        // TODO: persist task — wired in a later step
+        tasksModel.createTaskButtonTapped(form: task)
         dismiss()
     }
 }
 
 #Preview {
     NavigationStack {
-        AddTaskView()
+        AddTaskView(tasksModel: TasksModel())
     }
 }

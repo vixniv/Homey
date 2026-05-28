@@ -19,31 +19,38 @@ struct HomeView: View {
         TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .done, assigneeEmoji: "👱‍♀️")
     ]
 
+    @State private var showAddTask = false
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            HeaderTitle(name: "ana")
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 20) {
+                HeaderTitle(name: "ana")
 
-            MemberAvatarsList(user: user, householdMembers: householdMembers)
+                MemberAvatarsList(user: user, householdMembers: householdMembers)
 
-            ProgressBar(taskCount: 20, completedTaskCount: 14)
+                ProgressBar(taskCount: 20, completedTaskCount: 14)
 
-            Text("Today's chores")
-                .font(.title)
+                Text("Today's chores")
+                    .font(.title)
 
-            SegmentedControl(selection: $choreViewMode)
+                SegmentedControl(selection: $choreViewMode)
 
-            ScrollView {
-                ForEach($tasks) {$task in
-                    TaskCard(task: task) {
+                ScrollView {
+                    ForEach($tasks) {$task in
+                        TaskCard(task: task) {
 
+                        }
+                    }
+
+                    PrimaryButton(title: "+ Add task") {
+                        showAddTask = true
                     }
                 }
-
-                PrimaryButton(title: "+ Add task") {
-
-                }
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
+            .navigationDestination(isPresented: $showAddTask) {
+                AddTaskView()
+            }
         }
     }
 }

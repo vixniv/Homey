@@ -26,7 +26,7 @@ struct HeaderTitle: View {
             
             // Notification button
             Button {
-                //action
+                //TODO: notification logic
                 
             } label: {
                 Image(systemName: "bell")

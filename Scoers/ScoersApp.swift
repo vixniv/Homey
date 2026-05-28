@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct ChoreManagementAppApp: App {
+struct Scoers: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

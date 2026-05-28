@@ -20,30 +20,41 @@ struct HomeView: View {
     ]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            HeaderTitle(name: "ana")
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 20) {
+                HeaderTitle(name: "ana")
 
-            MemberAvatarsList(user: user, householdMembers: householdMembers)
+                MemberAvatarsList(user: user, householdMembers: householdMembers)
 
-            ProgressBar(taskCount: 20, completedTaskCount: 14)
+                ProgressBar(taskCount: 20, completedTaskCount: 14)
 
-            Text("Today's chores")
-                .font(.title)
+                Text("Today's chores")
+                    .font(.title)
 
-            SegmentedControl(selection: $choreViewMode)
+                SegmentedControl(selection: $choreViewMode)
 
-            ScrollView {
-                ForEach($tasks) {$task in
-                    TaskCard(task: task) {
+                ScrollView {
+                    ForEach($tasks) {$task in
+                        TaskCard(task: task) {
 
+                        }
+                    }
+
+                    NavigationLink {
+                        AddTaskView()
+                    } label: {
+                        Text("+ Add task")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color.appPrimary)
+                            .cornerRadius(12)
                     }
                 }
-
-                PrimaryButton(title: "+ Add task") {
-
-                }
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
+            .padding()
         }
     }
 }

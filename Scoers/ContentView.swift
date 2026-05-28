@@ -24,9 +24,9 @@ struct ContentView: View {
                     HomeView()
                 }
             }
-            .frame(height: .infinity)
+            .frame(maxHeight: .infinity)
             .padding()
-            
+
             Spacer()
             
             NavigationTabBar(selectedTabItem: $selectedTabItem)

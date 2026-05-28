@@ -10,7 +10,7 @@ import SwiftUI
 struct TextInputField: View {
 
     @Binding var choreTitle: String
-    var color: Color = Color(red: 124/255, green: 196/255, blue: 240/255)
+    var color: Color = .appPrimary
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {

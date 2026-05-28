@@ -16,7 +16,7 @@ import SwiftUI
 
 struct TimePicker: View {
     @Binding var selectedTime: Date
-    var color: Color = Color(red: 124/255, green: 196/255, blue: 240/255)
+    var color: Color = .appPrimary
     @State private var showPicker = false
 
     private var formattedTime: String {

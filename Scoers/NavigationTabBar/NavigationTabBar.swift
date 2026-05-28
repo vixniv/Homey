@@ -22,7 +22,8 @@ struct NavigationTabBar: View {
                 
                 TabItemView(value: "profile", systemImage: "person", tabItem: .profile, selection: $selectedTabItem)
             }
-            .frame(width: .infinity, height: 100)
+            .frame(maxWidth: .infinity)
+            .frame(height: 100)
             .fontWeight(.regular)
             .foregroundStyle(.black)
         }

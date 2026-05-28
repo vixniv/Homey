@@ -10,16 +10,16 @@ import SwiftUI
 struct MemberAvatarItemSelectable: View {
     var householdMember: HouseholdMemberModel
     var highlighted = false
-    @State var isSelected: Bool
-    
+    @Binding var isSelected: Bool
+
     var action: () -> Void // logic to select a household member
-    
+
     var width: Double = 50
-    
+
     var body: some View {
         VStack {
             Button {
-                isSelected.toggle()
+                action()
             } label: {
                 if let imageURL = householdMember.imageURL {
                     // TODO: load image if imageURL is valid
@@ -51,16 +51,16 @@ struct MemberAvatarItemSelectable: View {
             VStack {
                 Text(householdMember.nickname)
                     .foregroundStyle(.secondary)
-                Text("^[\(householdMember.getNumberOfTask()) task](inflect: true)")
+                Text("^[\(householdMember.numberOfTasks) task](inflect: true)")
             }
         }
     }
 }
 
 #Preview {
-    @Previewable @State var isSelected = false;
-    
-    MemberAvatarItemSelectable(householdMember: HouseholdMemberModel(nickname: "Ana"), isSelected: true, action: {})
+    @Previewable @State var isSelected = false
+
+    MemberAvatarItemSelectable(householdMember: HouseholdMemberModel(nickname: "Ana"), isSelected: $isSelected, action: { isSelected.toggle() })
 }
 
 #Preview {

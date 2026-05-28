@@ -55,7 +55,8 @@ struct ProgressBar: View {
                     }
                     
                 }
-                .frame(width: .infinity, height: height)
+                .frame(maxWidth: .infinity)
+                .frame(height: height)
                 .cornerRadius(cornerRadius)
             }
         } else {

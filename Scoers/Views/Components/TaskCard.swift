@@ -10,7 +10,7 @@ enum TaskState {
 
 // MARK: - task model
 
-struct Task: Identifiable {
+struct TaskItem: Identifiable {
     let id = UUID()
     var title: String
     var dueLabel: String
@@ -21,7 +21,7 @@ struct Task: Identifiable {
 // MARK: - task card view
 
 struct TaskCard: View {
-    let task: Task
+    let task: TaskItem
     let onGrab: () -> Void
 
     var body: some View {
@@ -176,10 +176,10 @@ struct DoneBadge: View {
 // MARK: - preview
 
 struct TaskCardDemoView: View {
-    @State private var tasks: [Task] = [
-        Task(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .available),
-        Task(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .inProgress, assigneeEmoji: "👱‍♀️"),
-        Task(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .done, assigneeEmoji: "👱‍♀️")
+    @State private var tasks: [TaskItem] = [
+        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .available),
+        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .inProgress, assigneeEmoji: "👱‍♀️"),
+        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .done, assigneeEmoji: "👱‍♀️")
     ]
 
     var body: some View {

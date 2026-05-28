@@ -58,7 +58,8 @@ struct SegmentedControl: View {
             .padding(2)
             
         }
-        .frame(width: .infinity, height:50)
+        .frame(maxWidth: .infinity)
+        .frame(height: 50)
     }
 }
 

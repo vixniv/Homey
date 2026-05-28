@@ -11,9 +11,7 @@ struct HouseholdMemberModel : Identifiable {
     let id: UUID = UUID()
     var nickname: String
     var imageURL: URL?
-    func getNumberOfTask() -> Int {
-        Int.random(in: 1...8)
-    }
+    let numberOfTasks: Int = Int.random(in: 1...8)
     
     // mock members
     static let mockMembers: [HouseholdMemberModel] = [

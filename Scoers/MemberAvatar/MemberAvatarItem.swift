@@ -9,18 +9,16 @@ import SwiftUI
 
 struct MemberAvatarItem: View {
     var householdMember: HouseholdMemberModel
-    var highlighted = false
+    var highlighted = true
     var body: some View {
         VStack {
             ZStack {
-                // add highlight (as a circular border and shadow)
                 if highlighted {
                     Circle()
-                        .foregroundStyle(.blue)
-                        .frame(width: 54)
-                        .shadow(radius: 15)
+                        .foregroundStyle(.appPrimary)
+                        .frame(maxWidth: .infinity)
                 }
-                
+
                 if let imageURL = householdMember.imageURL {
                     // TODO: load image if imageURL is valid
                 } else {
@@ -30,16 +28,16 @@ struct MemberAvatarItem: View {
                         .frame(width: 50)
                         .clipShape(Circle())
                 }
-                    
             }
-            
-            //Text
+
             VStack {
                 Text(householdMember.nickname)
                     .foregroundStyle(.secondary)
-                Text("^[\(householdMember.getNumberOfTask()) task](inflect: true)")
+                Text("^[\(householdMember.numberOfTasks) task](inflect: true)")
+                    .font(.caption)
             }
         }
+        .frame(width: 54)
     }
 }
 

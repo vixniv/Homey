@@ -16,7 +16,7 @@ struct AssignMembersView: View {
             Text("Assign to")
             HStack(spacing: 20) {
                 ForEach(householdMembers){ member in
-                    MemberAvatarItemSelectable(householdMember: member, isSelected: false, action: {})
+                    MemberAvatarItemSelectable(householdMember: member, isSelected: .constant(false), action: {})
                 }
             }
         }

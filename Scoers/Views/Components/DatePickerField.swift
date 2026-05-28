@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DatePickerField: View {
     @Binding var selectedDate: Date
-    var color: Color = Color(red: 124/255, green: 196/255, blue: 240/255)
+    var color: Color = .appPrimary
     
     @State private var showDatePicker = false
     

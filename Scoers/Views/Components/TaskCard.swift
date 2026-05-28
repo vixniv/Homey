@@ -16,6 +16,7 @@ struct TaskItem: Identifiable {
     var dueLabel: String
     var state: TaskState = .available
     var assigneeEmoji: String = "👱‍♀️"
+    var assigneeId: UUID? = nil
 }
 
 // MARK: - task card view

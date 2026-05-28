@@ -19,7 +19,7 @@ struct TabItemView: View {
         } label: {
             ZStack {
                 if selection == tabItem {
-                    Color(.orange) // color when selected
+                    Color("AppSecondaryColor") // color when selected
                 }else {
                     Color(uiColor: .systemBackground) // color when not selected
                 }

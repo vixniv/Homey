@@ -68,3 +68,7 @@ struct ProgressBar: View {
     ProgressBar(taskCount: 21, completedTaskCount: 20)
         .padding()
 }
+
+#Preview {
+    ContentView(selectedTabItem: .home)
+}

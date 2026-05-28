@@ -10,5 +10,5 @@
 import Foundation
 
 enum TabItemEnum {
-    case home, tasks, schedule, profile
+    case home, progress, schedule, profile
 }

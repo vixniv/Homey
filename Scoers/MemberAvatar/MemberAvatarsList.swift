@@ -34,7 +34,9 @@ struct MemberAvatarsList: View {
 }
 
 #Preview {
-    
-    
     MemberAvatarsList(user: HouseholdMemberModel.mockUser, householdMembers: HouseholdMemberModel.mockMembers)
+}
+
+#Preview {
+    ContentView(selectedTabItem: .home)
 }

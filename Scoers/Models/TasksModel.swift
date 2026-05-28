@@ -15,7 +15,7 @@ final class TasksModel {
         tasks = [
             TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .available, assigneeId: user.id),
             TaskItem(title: "Take out the trash", dueLabel: "Today Before 8:00 P.M", state: .inProgress, assigneeId: others.first?.id),
-            TaskItem(title: "Vacuum the living room", dueLabel: "Yesterday", state: .done, assigneeId: others.dropFirst().first?.id ?? others.first?.id)
+            TaskItem(title: "Vacuum the living room", dueLabel: "Yesterday", state: .done, assigneeId: others.first?.id)
         ]
     }
 

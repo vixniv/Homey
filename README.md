@@ -1,4 +1,4 @@
-# Scoers
+# Homey
 
 Track, assign, and create a clean house with us.
 

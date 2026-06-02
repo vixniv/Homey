@@ -16,9 +16,9 @@ struct ProgressBar: View {
     }
     
     var cornerRadius: Double = 10
-    var color1 = Color("PastelRed")
-    var color2 = Color("AppPrimaryColor")
-    var height: Double = 20
+    var color1 = Color.appPrimary
+    var color2 = Color.gray.opacity(0.1)
+    var height: Double = 10
     
     var body: some View {
         if taskCount >= completedTaskCount {

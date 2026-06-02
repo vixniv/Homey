@@ -31,10 +31,10 @@ struct HomeView: View {
 
                 MemberAvatarsList(user: user, householdMembers: householdMembers)
 
-                ProgressBar(taskCount: 20, completedTaskCount: 14)
-
-                Text("Today's chores")
-                    .font(.title)
+                Text("Today's Chores")
+                    .font(.title.bold())
+                
+                ProgressBar(taskCount: 27, completedTaskCount: 23)
 
                 SegmentedControl(selection: $choreViewMode)
 
@@ -52,18 +52,6 @@ struct HomeView: View {
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)
-
-                NavigationLink {
-                    AddTaskView(tasksModel: tasksModel)
-                } label: {
-                    Text("+ Add task")
-                        .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(Color.appPrimary)
-                        .cornerRadius(12)
-                }
             }
             .padding()
         }

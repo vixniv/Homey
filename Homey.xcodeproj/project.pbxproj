@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		D5DB86742FC7EA0F006263A5 /* Scoers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scoers.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5DB86742FC7EA0F006263A5 /* Homey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Homey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D5DB86762FC7EA0F006263A5 /* Scoers */ = {
+		D5DB86762FC7EA0F006263A5 /* Homey */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Scoers;
+			path = Homey;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		D5DB866B2FC7EA0F006263A5 = {
 			isa = PBXGroup;
 			children = (
-				D5DB86762FC7EA0F006263A5 /* Scoers */,
+				D5DB86762FC7EA0F006263A5 /* Homey */,
 				D5DB86752FC7EA0F006263A5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		D5DB86752FC7EA0F006263A5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D5DB86742FC7EA0F006263A5 /* Scoers.app */,
+				D5DB86742FC7EA0F006263A5 /* Homey.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D5DB86732FC7EA0F006263A5 /* Scoers */ = {
+		D5DB86732FC7EA0F006263A5 /* Homey */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D5DB867F2FC7EA10006263A5 /* Build configuration list for PBXNativeTarget "Scoers" */;
+			buildConfigurationList = D5DB867F2FC7EA10006263A5 /* Build configuration list for PBXNativeTarget "Homey" */;
 			buildPhases = (
 				D5DB86702FC7EA0F006263A5 /* Sources */,
 				D5DB86712FC7EA0F006263A5 /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				D5DB86762FC7EA0F006263A5 /* Scoers */,
+				D5DB86762FC7EA0F006263A5 /* Homey */,
 			);
-			name = Scoers;
+			name = Homey;
 			packageProductDependencies = (
 			);
 			productName = ChoreManagementApp;
-			productReference = D5DB86742FC7EA0F006263A5 /* Scoers.app */;
+			productReference = D5DB86742FC7EA0F006263A5 /* Homey.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D5DB866F2FC7EA0F006263A5 /* Build configuration list for PBXProject "Scoers" */;
+			buildConfigurationList = D5DB866F2FC7EA0F006263A5 /* Build configuration list for PBXProject "Homey" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D5DB86732FC7EA0F006263A5 /* Scoers */,
+				D5DB86732FC7EA0F006263A5 /* Homey */,
 			);
 		};
 /* End PBXProject section */
@@ -315,7 +315,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D5DB866F2FC7EA0F006263A5 /* Build configuration list for PBXProject "Scoers" */ = {
+		D5DB866F2FC7EA0F006263A5 /* Build configuration list for PBXProject "Homey" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D5DB867D2FC7EA10006263A5 /* Debug */,
@@ -324,7 +324,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D5DB867F2FC7EA10006263A5 /* Build configuration list for PBXNativeTarget "Scoers" */ = {
+		D5DB867F2FC7EA10006263A5 /* Build configuration list for PBXNativeTarget "Homey" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D5DB86802FC7EA10006263A5 /* Debug */,

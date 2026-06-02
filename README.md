@@ -1,4 +1,4 @@
-# Scoers
+# Homey
 
 Track, assign, and create a clean house with us.
 
@@ -9,12 +9,12 @@ Track, assign, and create a clean house with us.
 
 ## Getting Started
 1. Clone the repo
-   git clone https://github.com/vixniv/Scoers.git
+   git clone https://github.com/vixniv/Homey.git
 2. Open MyApp.xcodeproj in Xcode
 3. Select a simulator or device and run (⌘R)
 
 ## Architecture
-MVVM with SwiftUI. Feature modules live under `/Scoers`.
+MVVM with SwiftUI. Feature modules live under `/Homey`.
 
 ## Dependencies
 Managed via Swift Package Manager (SPM). Xcode resolves them automatically on first build.

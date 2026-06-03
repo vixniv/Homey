@@ -8,29 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var selectedTabItem: TabItemEnum = .home
+    
     var body: some View {
-        VStack {
-            // page switch
-            VStack {
-                switch(selectedTabItem) {
-                case .progress:
-                    ProgressView()
-                case .schedule:
-                    ScheduleView()
-                case .profile:
-                    ProfileView()
-                default:
-                    HomeView()
+        TabView {
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house")
                 }
-            }
-            .frame(maxHeight: .infinity)
-
-            Spacer()
             
-            NavigationTabBar(selectedTabItem: $selectedTabItem)
+            ProgressView()
+                .tabItem {
+                    Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
+                }
+            
+            ScheduleView()
+                .tabItem {
+                    Label("Schedule", systemImage: "calendar")
+                }
+            
+            ProfileView()
+                .tabItem {
+                    Label("Profile", systemImage: "person")
+                }
         }
-        .ignoresSafeArea(.container, edges: .bottom)
     }
 }
 

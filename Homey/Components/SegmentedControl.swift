@@ -70,5 +70,5 @@ struct SegmentedControl: View {
 }
 
 #Preview {
-    ContentView(selectedTabItem: .home)
+    ContentView()
 }

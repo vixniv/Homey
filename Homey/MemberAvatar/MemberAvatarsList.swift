@@ -38,5 +38,5 @@ struct MemberAvatarsList: View {
 }
 
 #Preview {
-    ContentView(selectedTabItem: .home)
+    ContentView()
 }

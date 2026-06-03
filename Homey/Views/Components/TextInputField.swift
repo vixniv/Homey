@@ -10,17 +10,17 @@ import SwiftUI
 struct TextInputField: View {
 
     @Binding var choreTitle: String
-    var color: Color = .appPrimary
+    var color: Color = Color.gray.opacity(0.3)
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Task")
-                .font(.system(size: 14, weight: .regular))
-            TextField("Clean the bathroom", text: $choreTitle)
-                .padding(12)
-                .font(.system(size: 16, weight: .regular))
+            Text("Task Title")
+                .font(.system(size: 16, weight: .medium))
+            TextField("Enter Task Title Here", text: $choreTitle)
+                .padding(17)
+                .font(.system(size: 16, weight: .medium))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 30)
                         .stroke(color)
                 )
         }

@@ -59,5 +59,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    ContentView(selectedTabItem: .home)
+    ContentView()
 }

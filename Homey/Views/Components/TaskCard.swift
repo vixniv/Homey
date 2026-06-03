@@ -204,5 +204,5 @@ struct TaskCardDemoView: View {
 }
 
 #Preview {
-    ContentView(selectedTabItem: .home)
+    ContentView()
 }

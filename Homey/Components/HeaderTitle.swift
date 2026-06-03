@@ -59,5 +59,5 @@ struct HeaderTitle: View {
 }
 
 #Preview {
-    ContentView(selectedTabItem: .home)
+    ContentView()
 }

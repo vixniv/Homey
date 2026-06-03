@@ -43,7 +43,7 @@ struct AddTaskView: View {
 
                     assignToSection
 
-                    PrimaryButton(title: "Create Task", action: createTask, color: .appSecondary)
+                    PrimaryButton(title: "Create Task", color: .appSecondary, action: createTask)
                         .padding(.horizontal)
                         .padding(.top, 8)
                 }

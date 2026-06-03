@@ -10,17 +10,16 @@ import SwiftUI
 struct SegmentedControl: View {
     @Binding var selection: ChoreViewMode //selection
     
-    let cornerRadius: Double = 15
+    let cornerRadius: Double = 30
     
-    let color1: Color = Color("AppPrimaryColor")
-    let color2: Color = Color("AppSecondaryColor")
+    let color1: Color = Color(.gray.opacity(0.2))
+    let color2: Color = Color(.white)
     
     var body: some View {
         ZStack{
             RoundedRectangle(cornerRadius: cornerRadius)
                 .foregroundStyle(color1)
                 
-            
             HStack {
                 Button {
                     selection = .all
@@ -29,13 +28,13 @@ struct SegmentedControl: View {
                         if selection == .all {
                             RoundedRectangle(cornerRadius: cornerRadius)
                                 .foregroundStyle(color2)
-                        } else {
-                            RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundStyle(color1)
                         }
                         
-                        Text("Household")
+                        Text("Household chores")
+                            .bold()
                             .foregroundStyle(.black)
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity)
                     }
                 }
                 Button {
@@ -45,13 +44,13 @@ struct SegmentedControl: View {
                         if selection == .myself {
                             RoundedRectangle(cornerRadius: cornerRadius)
                                 .foregroundStyle(color2)
-                        } else {
-                            RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundStyle(color1)
                         }
                         
                         Text("My chores")
+                            .bold()
                             .foregroundStyle(.black)
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity)
                     }
                 }
             }
@@ -59,7 +58,7 @@ struct SegmentedControl: View {
             
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 50)
+        .frame(height: 35)
     }
 }
 

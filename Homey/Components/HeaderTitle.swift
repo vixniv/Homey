@@ -10,6 +10,9 @@ import SwiftUI
 struct HeaderTitle: View {
     var name: String // name of the houshold member
     let date: Date = Date.now
+    
+    @State private var tasksModel = TasksModel()
+
     var body: some View {
         HStack {
             // Title Group
@@ -24,6 +27,18 @@ struct HeaderTitle: View {
             }
             
             Spacer()
+            
+            //Add task
+            NavigationLink() {
+                AddTaskView(tasksModel: tasksModel)
+            }label : {
+                Image(systemName: "plus")
+                    .font(.system(.title2, weight: .regular))
+                    .foregroundStyle(.white)
+                    .padding(10)
+                    .background(Color.appPrimary)
+                    .clipShape(Circle())
+            }
             
             // Notification button
             Button {

@@ -9,18 +9,18 @@ import UIKit
 
 struct PhotoPickerField: View {
     @Binding var photoData: Data?
-    var color: Color = .appPrimary
+    var color: Color = Color.gray.opacity(0.3)
 
     @State private var selectedItem: PhotosPickerItem?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Photo")
-                .font(.system(size: 14, weight: .regular))
+                .font(.system(size: 16, weight: .medium))
 
             PhotosPicker(selection: $selectedItem, matching: .images) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 30)
                         .stroke(color)
 
                     if let data = photoData, let uiImage = UIImage(data: data) {
@@ -34,7 +34,7 @@ struct PhotoPickerField: View {
                             Image(systemName: "camera")
                                 .font(.system(size: 22))
                                 .foregroundColor(.primary)
-                            Text("Add a photo")
+                            Text("Add photo")
                                 .font(.system(size: 16))
                                 .foregroundColor(.primary)
                             Text("Show exactly what needs to be done")

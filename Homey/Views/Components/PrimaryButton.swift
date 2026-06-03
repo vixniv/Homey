@@ -9,23 +9,24 @@ import SwiftUI
 
 struct PrimaryButton: View {
     let title: String
+    var type: String?
+    var color: Color = Color("AppPrimaryColor")
     let action: () -> Void
-    var color: Color = .appPrimary
 
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: 16, weight: .regular))
-                .foregroundColor(.black)
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(type == "secondary" ? .black : .white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
-                .background(color)
-                .cornerRadius(12)
         }
+        .glassEffect(.regular.tint(type == "secondary" ? .white : Color("AppPrimaryColor")), in: Capsule())
+        
     }
 }
 
 #Preview {
-    PrimaryButton(title: "+ Add task") {}
+    PrimaryButton(title: "Create Task") {}
         .padding()
 }

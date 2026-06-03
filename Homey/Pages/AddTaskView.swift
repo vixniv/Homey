@@ -57,14 +57,14 @@ struct AddTaskView: View {
     private var instructionContent: some View {
         switch task.instructionType {
         case .voiceNote:
-            VoiceNotePlaceholder(color: Color.appPrimary)
+            VoiceNotePlaceholder()
         case .notes:
             VStack(alignment: .leading, spacing: 6) {
                 TextField("Type your notes…", text: $task.notes, axis: .vertical)
                     .lineLimit(3...6)
                     .font(.system(size: 16, weight: .regular))
                     .padding(12)
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.appPrimary))
+                    .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color.gray.opacity(0.3)))
             }
             .padding(.horizontal)
         }

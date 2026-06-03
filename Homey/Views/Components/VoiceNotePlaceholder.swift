@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct VoiceNotePlaceholder: View {
-    var color: Color = .appPrimary
+    var color: Color = Color.gray.opacity(0.3)
 
     var body: some View {
         VStack(spacing: 8) {
@@ -19,7 +19,7 @@ struct VoiceNotePlaceholder: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 28)
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(color))
+        .overlay(RoundedRectangle(cornerRadius: 30).stroke(color))
         .padding(.horizontal)
     }
 }

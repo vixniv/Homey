@@ -20,7 +20,7 @@ struct AddTaskView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            TopNavigationBar(title: "Add Task") {
+            TopNavBar(title: "Add Task") {
                 dismiss()
             }
 

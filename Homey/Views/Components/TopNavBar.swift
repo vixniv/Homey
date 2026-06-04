@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddTaskView2: View {
+struct TopNavBar: View {
     let title: String
     var onBack: (() -> Void)? = nil
     
@@ -69,5 +69,5 @@ struct NavFadeOverlay: View {
 }
 
 #Preview {
-    AddTaskView2(title: "Add Task")
+    TopNavBar(title: "Add Task")
 }

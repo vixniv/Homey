@@ -20,10 +20,10 @@ struct AddTaskView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            TopNavigationBar(title: "Add Task") {
+            TopNavBar(title: "Add Task", leadingAction: {
                 dismiss()
-            }
-
+            })
+            
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     TextInputField(choreTitle: $task.title)

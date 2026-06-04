@@ -7,67 +7,53 @@
 
 import SwiftUI
 
-struct AddTaskView2: View {
+struct TopNavBar: View {
     let title: String
-    var onBack: (() -> Void)? = nil
-    
-    @Environment(\.dismiss) private var dismiss
+    var leadingAction: (() -> Void)? = nil
+    var leadingIcon: String = "xmark"          // default X, bisa diganti "chevron.left"
+    var trailingIcon: String? = nil             // optional icon kanan (misal "gear")
+    var trailingAction: (() -> Void)? = nil
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 16) {
-                    ForEach(0..<30) { i in
-                        Text("Task item \(i + 1)")
-                            .padding(.horizontal)
-                    }
-                }
-                .padding(.top, 8)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        onBack?()
-                    }) {
-                        Image(systemName: "xmark")
+        ZStack {
+            Text(title)
+                .font(.system(size: 20, weight: .semibold))
+
+            HStack {
+                if let action = leadingAction {
+                    Button(action: action) {
+                        Image(systemName: leadingIcon)
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.primary)
+                            .frame(width: 36, height: 36)
+                            .background(Color(.systemGray6))
+                            .clipShape(Circle())
                     }
+                } else {
+                    Spacer().frame(width: 36)
                 }
-                ToolbarItem(placement: .principal) {
-                    Text(title)
-                        .font(.system(size: 20, weight: .semibold))
+
+                Spacer()
+
+                if let trailingIcon, let trailingAction {
+                    Button(action: trailingAction) {
+                        Image(systemName: trailingIcon)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.primary)
+                            .frame(width: 36, height: 36)
+                            .background(Color(.systemGray6))
+                            .clipShape(Circle())
+                    }
+                } else {
+                    Spacer().frame(width: 36)
                 }
             }
         }
-    }
-}
-
-struct NavFadeOverlay: View {
-    var body: some View {
-        GeometryReader { geo in
-            let navHeight = geo.safeAreaInsets.top + 44
-
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        stops: [
-                            .init(color: Color(.systemBackground).opacity(1.0), location: 0.0),
-                            .init(color: Color(.systemBackground).opacity(0.85), location: 0.6),
-                            .init(color: Color(.systemBackground).opacity(0.0), location: 1.0),
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .frame(height: navHeight + 24) // extra 24pt fade tail
-        }
-        .frame(height: 0) // doesn't push content down
+        .padding(.horizontal, 16)
+        .frame(height: 44)
     }
 }
 
 #Preview {
-    AddTaskView2(title: "Add Task")
+    TopNavBar(title: "Add Task")
 }

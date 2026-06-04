@@ -20,29 +20,29 @@ struct AddTaskView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            TopNavigationBar(title: "Add Task") {
-                dismiss()
-            }
-
+            //            TopNavBar(title: "Add Task") {
+            //                dismiss()
+            //            }
+            
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     TextInputField(choreTitle: $task.title)
-
+                    
                     PhotoPickerField(photoData: $task.photoData)
-
+                    
                     DatePickerField(selectedDate: $task.date)
-
+                    
                     VStack(alignment: .leading, spacing: 8) {
                         TimePicker(selectedTime: $task.time)
                         infoBullets
                     }
-
+                    
                     InstructionSegment(selection: $task.instructionType)
-
+                    
                     instructionContent
-
+                    
                     assignToSection
-
+                    
                     PrimaryButton(title: "Create Task", color: .appSecondary, action: createTask)
                         .padding(.horizontal)
                         .padding(.top, 8)
@@ -51,6 +51,17 @@ struct AddTaskView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .navigationTitle("Add Task")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                }
+            }
+        }
     }
 
     @ViewBuilder

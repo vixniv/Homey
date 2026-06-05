@@ -48,22 +48,12 @@ struct AddTaskView: View {
                 }
                 .padding(.vertical, 16)
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-//                ToolbarItem(placement: .topBarLeading) {
-//                    Button(action: {
-//                        onBack?()
-//                    }) {
-//                        Image(systemName: "chevron.left")
-//                            .font(.system(size: 16, weight: .semibold))
-//                            .foregroundColor(.primary)
-//                    }
-//                }
-                ToolbarItem(placement: .principal) {
-                    Text("Add Task")
-                        .font(.system(size: 20, weight: .semibold))
-                }
-            }
+            .navigationToolbar(
+                title: "Add Task",
+                leadingAction: { onBack?() }
+            )
+        }
+
     }
 
     private var assignToSection: some View {

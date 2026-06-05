@@ -108,6 +108,7 @@ struct HomeView: View {
                 DetailChoreView(task: task)
                     .presentationDragIndicator(.visible)
                     .presentationDetents([.medium, .large])
+//                    .presentationBackgroundInteraction(.enabled(upThrough: .large))
                     .interactiveDismissDisabled(false)
             }
         }

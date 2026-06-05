@@ -36,6 +36,7 @@ final class TasksModel {
         let task = TaskItem(
             title: form.title,
             dueLabel: Self.formatDueLabel(date: form.date, time: form.time),
+            state: form.assigneeId != nil ? .inProgress : .available,
             assigneeInitials: Self.initials(from: assignee),
             assigneeId: form.assigneeId
         )

@@ -12,7 +12,7 @@ struct AddTaskView: View {
 
     @State private var task: TaskModel = {
         var model = TaskModel()
-        model.assigneeId = HouseholdMemberModel.mockUser.id
+        model.assigneeId = nil
         return model
     }()
 
@@ -21,7 +21,6 @@ struct AddTaskView: View {
     let onBack: (() -> Void)? = nil
 
     var body: some View {
-        NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     TextInputField(choreTitle: $task.title)
@@ -55,8 +54,6 @@ struct AddTaskView: View {
             )
         }
 
-    }
-
     private var assignToSection: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Assign to")
@@ -65,18 +62,15 @@ struct AddTaskView: View {
                 .padding(.bottom, 10)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 20) {
-                    ForEach(allMembers) { member in
-                        MemberAvatarItemSelectable(
-                            householdMember: member,
-                            isSelected: Binding(
-                                get: { task.assigneeId == member.id },
-                                set: { _ in }
-                            ),
-                            action: { task.assigneeId = member.id }
-                        )
-                    }
-                }
+                MemberAvatarsList(
+                    user: HouseholdMemberModel.mockUser,
+                    householdMembers: allMembers,
+                    showDivider: false,
+                    selectedMemberId: Binding(
+                        get: { task.assigneeId },
+                        set: { task.assigneeId = $0 }
+                    )
+                )
                 .padding(.horizontal)
             }
         }
@@ -90,7 +84,5 @@ struct AddTaskView: View {
 }
 
 #Preview {
-    NavigationStack {
-        AddTaskView(tasksModel: TasksModel())
-    }
+    AddTaskView(tasksModel: TasksModel())
 }

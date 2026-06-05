@@ -10,34 +10,53 @@ import SwiftUI
 struct MemberAvatarItem: View {
     var householdMember: HouseholdMemberModel
     var highlighted = true
+    
+    // Helper untuk mengambil 2 huruf pertama dan diubah ke uppercase
+    private var initials: String {
+        if householdMember.nickname.lowercased() == "all" {
+            return "ALL"
+        }
+        return String(householdMember.nickname.prefix(2)).uppercased()
+    }
+    
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             ZStack {
-                if highlighted {
+                if householdMember.nickname.lowercased() == "all" {
                     Circle()
-                        .foregroundStyle(.appPrimary)
-                        .frame(maxWidth: .infinity)
-                }
-
-                if let imageURL = householdMember.imageURL {
-                    // TODO: load image if imageURL is valid
+                        .foregroundStyle(highlighted ? .appPrimary : .gray.opacity(0.3))
+                        .frame(width: 50, height: 50)
+                    
+                    Text(initials)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white)
                 } else {
-                    Image("EmptyProfileImage")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50)
-                        .clipShape(Circle())
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Circle()
+                                .stroke(highlighted ? .appPrimary : Color.gray.opacity(0.3), lineWidth: 2)
+                        )
+                    
+                    Text(initials)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.black)
                 }
             }
-
-            VStack {
+            .frame(width: 54, height: 54)
+            
+            VStack(spacing: 2) {
                 Text(householdMember.nickname)
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(highlighted ? .primary : .secondary)
+                
                 Text("^[\(householdMember.numberOfTasks) task](inflect: true)")
                     .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
-        .frame(width: 54)
+        .frame(width: 60)
     }
 }
 

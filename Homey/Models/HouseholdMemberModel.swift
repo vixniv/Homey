@@ -15,10 +15,11 @@ struct HouseholdMemberModel : Identifiable {
     
     // mock members
     static let mockMembers: [HouseholdMemberModel] = [
+        HouseholdMemberModel(nickname: "All"),
+        HouseholdMemberModel(nickname: "Mom"),
         HouseholdMemberModel(nickname: "Ana"),
-        HouseholdMemberModel(nickname: "Adi"),
-        HouseholdMemberModel(nickname: "Ama"),
-        HouseholdMemberModel(nickname: "Dad")
+        HouseholdMemberModel(nickname: "Dad"),
+        HouseholdMemberModel(nickname: "Ama")
     ]
     
     // mock user

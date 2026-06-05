@@ -32,7 +32,7 @@ struct Deadline: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Date and deadline")
-                .font(.system(size: 22, weight: .semibold))
+                .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(Color(red: 0.10, green: 0.10, blue: 0.22))
 
             // Date + Time pills
@@ -71,10 +71,10 @@ private struct DatePill: View {
             showPicker = true
         } label: {
             Text(label)
-                .font(.system(size: 20, weight: .regular))
+                .font(.system(size: 18, weight: .regular))
                 .foregroundColor(.primary)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 14)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
                 .background(Color(.systemGray6))
                 .clipShape(Capsule())
         }
@@ -108,10 +108,10 @@ private struct TimePill: View {
             showPicker = true
         } label: {
             Text(label)
-                .font(.system(size: 20, weight: .regular))
+                .font(.system(size: 18, weight: .regular))
                 .foregroundColor(.primary)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 14)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
                 .background(Color(.systemGray6))
                 .clipShape(Capsule())
         }
@@ -184,7 +184,7 @@ private struct InfoBullet: View {
                 .fill(Color.appPrimary)
                 .frame(width: 8, height: 8)
             Text(text)
-                .font(.system(size: 16, weight: .regular))
+                .font(.system(size: 14, weight: .regular))
                 .foregroundColor(Color(.systemGray))
         }
     }

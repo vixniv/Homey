@@ -18,82 +18,63 @@ struct AddTaskView: View {
 
     private let allMembers = HouseholdMemberModel.mockMembers
 
+    let onBack: (() -> Void)? = nil
+
     var body: some View {
-        VStack(spacing: 0) {
-            TopNavBar(title: "Add Task", leadingAction: {
-                dismiss()
-            })
-            
+        NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     TextInputField(choreTitle: $task.title)
+                        .padding(.bottom, 10)
 
-                    PhotoPickerField(photoData: $task.photoData)
+                    Deadline(
+                        selectedDate: .constant(Date()),
+                        selectedTime: .constant(Date())
+                    )
+                        .padding(.bottom, 10)
 
-                    DatePickerField(selectedDate: $task.date)
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        TimePicker(selectedTime: $task.time)
-                        infoBullets
-                    }
-
-                    InstructionSegment(selection: $task.instructionType)
-
-                    instructionContent
+                    InstructionInput()
+                        .padding(.bottom, 10)
 
                     assignToSection
+                        .padding(.bottom, 10)
 
-                    PrimaryButton(title: "Create Task", color: .appSecondary, action: createTask)
-                        .padding(.horizontal)
-                        .padding(.top, 8)
+                    PrimaryButton(
+                        title: "Create Task",
+                        color: .appSecondary,
+                        action: createTask
+                    )
+                    .padding(.horizontal)
+                    .padding(.top, 8)
                 }
                 .padding(.vertical, 16)
             }
-        }
-        .navigationBarBackButtonHidden(true)
-    }
-
-    @ViewBuilder
-    private var instructionContent: some View {
-        switch task.instructionType {
-        case .voiceNote:
-            VoiceNotePlaceholder()
-        case .notes:
-            VStack(alignment: .leading, spacing: 6) {
-                TextField("Type your notes…", text: $task.notes, axis: .vertical)
-                    .lineLimit(3...6)
-                    .font(.system(size: 16, weight: .regular))
-                    .padding(12)
-                    .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color.gray.opacity(0.3)))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        onBack?()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.primary)
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    Text("Add Task")
+                        .font(.system(size: 20, weight: .semibold))
+                }
             }
-            .padding(.horizontal)
         }
-    }
 
-    private var infoBullets: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            bullet("Reminder sent 3 hours before")
-            bullet("Auto-assign 2 hours before")
-        }
-        .padding(.horizontal)
-    }
-
-    private func bullet(_ text: String) -> some View {
-        HStack(spacing: 6) {
-            Circle()
-                .fill(Color.appPrimary)
-                .frame(width: 6, height: 6)
-            Text(text)
-                .font(.system(size: 12))
-                .foregroundColor(.secondary)
-        }
     }
 
     private var assignToSection: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Assign to")
-                .font(.system(size: 14, weight: .regular))
+                .font(.system(size: 18, weight: .semibold))
                 .padding(.horizontal)
+                .padding(.bottom, 10)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {

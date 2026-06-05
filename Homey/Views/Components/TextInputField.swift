@@ -15,10 +15,11 @@ struct TextInputField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Task Title")
-                .font(.system(size: 16, weight: .medium))
+                .font(.system(size: 18, weight: .semibold))
+                .padding(.bottom, 10)
             TextField("Enter Task Title Here", text: $choreTitle)
                 .padding(17)
-                .font(.system(size: 16, weight: .medium))
+                .font(.system(size: 16, weight: .regular))
                 .overlay(
                     RoundedRectangle(cornerRadius: 30)
                         .stroke(color)

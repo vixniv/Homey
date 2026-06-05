@@ -15,6 +15,7 @@ struct HomeView: View {
     @State var choreViewMode: ChoreViewMode = .all
     @State private var selectedMemberId: UUID? = nil
     @State private var tasksModel = TasksModel()
+    @State private var selectedTask: TaskItem? = nil
 
     private var visibleTasks: [TaskItem] {
         guard let selectedId = selectedMemberId else {
@@ -32,7 +33,6 @@ struct HomeView: View {
                         householdMembers: householdMembers,
                         selectedMemberId: $selectedMemberId
                     )
-
                     VStack(alignment: .leading, spacing: 4){
                         Text("Today's Chores")
                             .font(.title2.bold())
@@ -44,6 +44,9 @@ struct HomeView: View {
                     VStack(spacing: 12) {
                         ForEach(visibleTasks) { task in
                             TaskCard(task: task) { }
+                                .onTapGesture {
+                                    selectedTask = task
+                                }
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                     Button(role: .destructive) {
                                         tasksModel.taskSwipedToDelete(task)
@@ -99,6 +102,13 @@ struct HomeView: View {
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 8)
+            }
+            .padding()
+            .sheet(item: $selectedTask) { task in
+                DetailChoreView(task: task)
+                    .presentationDragIndicator(.visible)
+                    .presentationDetents([.medium, .large])
+                    .interactiveDismissDisabled(false)
             }
         }
     }

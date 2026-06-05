@@ -6,6 +6,7 @@ enum TaskState {
     case available
     case inProgress
     case done
+    case late
 }
 
 // MARK: - task model
@@ -15,7 +16,7 @@ struct TaskItem: Identifiable {
     var title: String
     var dueLabel: String
     var state: TaskState = .available
-    var assigneeEmoji: String = "👱🏻‍♀️"
+    var assigneeInitials: String = ""
     var assigneeId: UUID? = nil
 }
 
@@ -29,26 +30,98 @@ struct TaskCard: View {
         HStack(alignment: .center, spacing: 12) {
             // left content
             VStack(alignment: .leading, spacing: 6) {
-                Text(task.title)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(textColor)
-                    .strikethrough(task.state == .done, color: textColor)
-
-                Text("Due : \(task.dueLabel)")
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(textColor)
+                HStack(spacing: 8){
+                    Text(task.title)
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(textColor)
+                    Group {
+                            switch task.state {
+                            case .inProgress:
+                                InProgressBadge()
+                            case .done:
+                                DoneBadge()
+                            case .available:
+                                EmptyView()
+                            case .late:
+                                LateBadge()
+                            }
+                        }
+                }
+                HStack{
+                    switch task.state {
+                    case .inProgress:
+                        Image(systemName: "clock")
+                            .foregroundStyle(Color.textYellow)
+                    case .done:
+                        Image(systemName: "clock")
+                            .foregroundStyle(Color.textGreen)
+                    case .available:
+                        Image(systemName: "clock")
+                            .foregroundStyle(Color.textBlue)
+                    case .late:
+                        Image(systemName: "exclamationmark.circle")
+                            .foregroundStyle(Color.textRed)
+                    }
+                    Text(task.dueLabel)
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(textColor)
+                }
             }
-
             Spacer()
-
-            // right action area
             switch task.state {
             case .available:
                 GrabButton(action: onGrab)
             case .inProgress:
-                InProgressBadge(emoji: task.assigneeEmoji)
+                Text(task.assigneeInitials)
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.black)
+                    .frame(width: 45, height: 45)
+                    .background(
+                        Circle()
+                            .fill(Color.white)
+                    )
+                    .overlay(
+                        Circle()
+                            .stroke(Color.textYellow)
+                        )
+                
             case .done:
-                DoneBadge(emoji: task.assigneeEmoji)
+                HStack{
+                    Image(systemName: "camera.badge.clock")
+                        .foregroundStyle(Color.textGreen)
+                        .frame(width: 35, height: 35)
+                        .background(
+                            Circle()
+                                .stroke(Color.textGreen, lineWidth: 1)
+                            )
+                        .padding(.horizontal, 3)
+                    Text(task.assigneeInitials)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.black)
+                        .frame(width: 45, height: 45)
+                        .background(
+                            Circle()
+                                .fill(Color.white)
+                        )
+                        .overlay(
+                            Circle()
+                                .stroke(Color(red: 0.45, green: 0.82, blue: 0.71), lineWidth: 2)
+                            )
+                }
+                
+            case .late:
+                Text(task.assigneeInitials)
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.black)
+                    .frame(width: 45, height: 45)
+                    .background(
+                        Circle()
+                            .fill(Color.white)
+                    )
+                    .overlay(
+                        Circle()
+                            .stroke(Color.textRed)
+                        )
             }
         }
         .padding(.horizontal, 20)
@@ -62,6 +135,7 @@ struct TaskCard: View {
         case .available: return .taskBlue
         case .inProgress: return .taskYellow
         case .done: return .taskGreen
+        case .late: return .taskRed
         }
     }
         
@@ -70,6 +144,7 @@ struct TaskCard: View {
         case .available: return .textBlue
         case .inProgress: return .textYellow
         case .done: return .textGreen
+        case .late: return .textRed
         }
     }
 }
@@ -85,19 +160,15 @@ struct GrabButton: View {
             HStack(spacing: 4) {
                 Text("Grab it")
                     .font(.system(size: 16, weight: .medium))
-                Image(systemName: "hand.tap")
-                    .font(.system(size: 16))
+//                Image(systemName: "hand.tap")
+//                    .font(.system(size: 16))
             }
-            .foregroundColor(Color(red: 45/255, green: 114/255, blue: 178/255))
+            .foregroundColor(.white)
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
-            .background(Color.white)
+            .background(.appPrimary)
             .clipShape(Capsule())
             .scaleEffect(isPressed ? 0.95 : 1.0)
-            .overlay(
-                Capsule()
-                    .stroke(Color(red: 45/255, green: 114/255, blue: 178/255), lineWidth: 1)
-            )
             .animation(.spring(response: 0.25, dampingFraction: 0.6), value: isPressed)
         }
         .buttonStyle(PlainButtonStyle())
@@ -112,28 +183,36 @@ struct GrabButton: View {
 // MARK: - in progress badge
 
 struct InProgressBadge: View {
-    let emoji: String
-
     var body: some View {
         HStack(spacing: 10) {
-            // assignee avatar circle
-            ZStack {
-                Circle()
-                    .strokeBorder(Color.badgeYellow)
-                    .background(Circle().fill(Color.white))
-                    .frame(width: 44, height: 44)
-                Text(emoji)
-                    .font(.system(size: 24))
-            }
-
-            // status pill
             Text("In Progress")
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.white)
-                .background(Color.badgeYellow)
-                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                .padding(.horizontal, 5)
+                .padding(.vertical, 2)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(.textYellow)
+                .background(Color.taskYellow)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.textYellow)
+                )
+                
+            
+        }
+    }
+}
+
+// MARK: - avatar
+struct Avatar: View {
+    let emoji: String
+    var body: some View {
+        ZStack {
+            Circle()
+                .strokeBorder(Color.badgeYellow)
+                .background(Circle().fill(Color.white))
+                .frame(width: 44, height: 44)
+            Text(emoji)
+                .font(.system(size: 24))
         }
     }
 }
@@ -141,32 +220,56 @@ struct InProgressBadge: View {
 // MARK: - done badge
 
 struct DoneBadge: View {
-    let emoji: String
-    
     var body: some View {
         HStack(spacing: 8) {
-            // assignee avatar circle
-            ZStack {
-                Circle()
-                    .strokeBorder(Color.badgeGreen)
-                    .background(Circle().fill(Color.white))
-                    .frame(width: 44, height: 44)
-                Text(emoji)
-                    .font(.system(size: 24))
-            }
-
-            // done pill
             Text("Done")
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(Color.white)
-                .background(Color.badgeGreen)
-                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                .padding(.horizontal, 5)
+                .padding(.vertical, 2)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(Color.textGreen)
+                .background(Color.taskGreen)
+                .clipShape(Capsule())
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Color.green.opacity(0.2), lineWidth: 1)
+                    Capsule()
+                        .stroke(Color.textGreen)
                 )
+        }
+    }
+}
+
+// MARK: - late badge
+
+struct LateBadge: View {
+    var body: some View {
+        HStack(spacing: 10) {
+            Text("Late")
+                .padding(.horizontal, 5)
+                .padding(.vertical, 2)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(.textRed)
+                .background(Color.taskRed)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.textRed)
+                )
+                
+            
+        }
+    }
+}
+
+// MARK: - camerabutton
+struct CameraButton: View {
+    var body: some View {
+        ZStack {
+            Circle()
+                .strokeBorder(Color.badgeGreen)
+                .background(Circle().fill(Color.white))
+                .frame(width: 40, height: 40)
+            Image(systemName: "camera.badge.clock")
+                .font(.system(size: 16))
+                .foregroundColor(Color.badgeGreen)
         }
     }
 }
@@ -175,9 +278,10 @@ struct DoneBadge: View {
 
 struct TaskCardDemoView: View {
     @State private var tasks: [TaskItem] = [
-        TaskItem(title: "Wash dishes", dueLabel: "Today Before 5:00 A.M", state: .available),
-        TaskItem(title: "Clean bathroom", dueLabel: "Today Before 5:00 A.M", state: .inProgress, assigneeEmoji: "👱‍♀️"),
-        TaskItem(title: "Mop the floor", dueLabel: "Today Before 5:00 A.M", state: .done, assigneeEmoji: "👱‍♀️")
+        TaskItem(title: "Wash dishes", dueLabel: "Before 5:00 A.M", state: .available),
+        TaskItem(title: "Clean bathroom", dueLabel: "Before 5:00 A.M", state: .inProgress, assigneeInitials: "MO"),
+        TaskItem(title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .done, assigneeInitials: "AN"),
+        TaskItem(title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .late, assigneeInitials: "AN")
     ]
 
     var body: some View {

@@ -18,7 +18,7 @@ struct HeaderTitle: View {
             // Title Group
             VStack(alignment: .leading) {
                 // Family Title
-                Text("\(name.capitalized)'s Family")
+                Text("\(name.capitalized)'s Family House")
                     .font(.system(.headline, weight: .semibold))
                 
                 // Today's date
@@ -27,18 +27,6 @@ struct HeaderTitle: View {
             }
             
             Spacer()
-            
-            //Add task
-            NavigationLink() {
-                AddTaskView(tasksModel: tasksModel)
-            }label : {
-                Image(systemName: "plus")
-                    .font(.system(.title2, weight: .regular))
-                    .foregroundStyle(.white)
-                    .padding(10)
-                    .background(Color.appPrimary)
-                    .clipShape(Circle())
-            }
             
             // Notification button
             Button {

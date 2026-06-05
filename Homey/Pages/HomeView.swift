@@ -14,6 +14,7 @@ struct HomeView: View {
     @State var choreViewMode: ChoreViewMode = .all
     @State private var selectedMemberId: UUID? = nil
     @State private var tasksModel = TasksModel()
+    @State private var selectedTask: TaskItem? = nil
 
     private var visibleTasks: [TaskItem] {
         guard let selectedId = selectedMemberId else {
@@ -42,6 +43,9 @@ struct HomeView: View {
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                            .onTapGesture {
+                                selectedTask = task
+                            }
                     }
                     .onDelete { offsets in
                         offsets.forEach { tasksModel.taskSwipedToDelete(visibleTasks[$0]) }
@@ -68,6 +72,13 @@ struct HomeView: View {
                 
             }
             .padding()
+            .sheet(item: $selectedTask) { task in
+                DetailChoreView(task: task)
+                    .presentationDragIndicator(.visible)
+                    .presentationDetents([.medium, .large])
+//                    .presentationBackgroundInteraction(.enabled(upThrough: .large))
+                    .interactiveDismissDisabled(false)
+            }
         }
     }
 }

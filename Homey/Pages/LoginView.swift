@@ -16,10 +16,11 @@ struct LoginView: View {
     var body: some View {
         VStack {
             
-            Text("Create your scheduled, organized house chores")
+            Text("Create Your Scheduled, Organized House Chores")
                 .font(.title)
                 .multilineTextAlignment(.center)
-                .padding()
+                .padding(.top, 50)
+                .fixedSize(horizontal: false, vertical: true)
             
             VStack(alignment: .leading) {
                 Text("Email")
@@ -83,6 +84,7 @@ struct LoginView: View {
             Spacer()
         }
         .padding()
+        .navigationBarBackButtonHidden(true)
     }
 }
 

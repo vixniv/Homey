@@ -54,8 +54,6 @@ struct AddTaskView: View {
             )
         }
 
-    }
-
     private var assignToSection: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Assign to")

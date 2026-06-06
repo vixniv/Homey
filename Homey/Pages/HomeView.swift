@@ -66,13 +66,11 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        
-                    } label: {
+                    NavigationLink(destination: NotificationView()) {
                         Image(systemName: "bell")
                             .imageScale(.medium)
                             .symbolRenderingMode(.hierarchical)
-                    }
+                        }
                 }
                 ToolbarSpacer(placement: .topBarTrailing)
                 ToolbarItem(placement: .topBarTrailing) {

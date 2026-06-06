@@ -49,8 +49,7 @@ struct AddTaskView: View {
                 .padding(.vertical, 16)
             }
             .navigationToolbar(
-                title: "Add Task",
-                leadingAction: { onBack?() }
+                title: "Add Task"
             )
         }
 

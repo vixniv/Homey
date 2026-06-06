@@ -74,10 +74,8 @@ struct HomeView: View {
                 }
                 ToolbarSpacer(placement: .topBarTrailing)
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "ellipsis")
+                    NavigationLink(destination: ProfileView()) {
+                        Image(systemName: "person")
                             .imageScale(.medium)
                             .symbolRenderingMode(.hierarchical)
                     }

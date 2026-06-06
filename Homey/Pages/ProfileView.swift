@@ -52,10 +52,7 @@ struct ProfileView: View {
             }
             .background(Color(.systemGroupedBackground))
             .navigationToolbar(
-                title: "Profile",
-                leadingAction: {
-                    // back action
-                }
+                title: "Profile"
             )
         }
     }

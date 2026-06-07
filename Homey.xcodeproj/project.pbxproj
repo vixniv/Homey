@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D5DB86A00000000000000004 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = D5DB86A00000000000000002 /* Dependencies */; };
+		D5DB86A00000000000000005 /* DependenciesMacros in Frameworks */ = {isa = PBXBuildFile; productRef = D5DB86A00000000000000003 /* DependenciesMacros */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D5DB86742FC7EA0F006263A5 /* Homey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Homey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5DB86A00000000000000004 /* Dependencies in Frameworks */,
+				D5DB86A00000000000000005 /* DependenciesMacros in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +72,8 @@
 			);
 			name = Homey;
 			packageProductDependencies = (
+				D5DB86A00000000000000002 /* Dependencies */,
+				D5DB86A00000000000000003 /* DependenciesMacros */,
 			);
 			productName = ChoreManagementApp;
 			productReference = D5DB86742FC7EA0F006263A5 /* Homey.app */;
@@ -94,6 +103,9 @@
 			);
 			mainGroup = D5DB866B2FC7EA0F006263A5;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D5DB86A00000000000000001 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D5DB86752FC7EA0F006263A5 /* Products */;
 			projectDirPath = "";
@@ -334,6 +346,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D5DB86A00000000000000001 /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D5DB86A00000000000000002 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5DB86A00000000000000001 /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
+		D5DB86A00000000000000003 /* DependenciesMacros */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5DB86A00000000000000001 /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = DependenciesMacros;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D5DB866C2FC7EA0F006263A5 /* Project object */;
 }

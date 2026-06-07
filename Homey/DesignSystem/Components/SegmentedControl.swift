@@ -63,5 +63,5 @@ struct SegmentedControl: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }

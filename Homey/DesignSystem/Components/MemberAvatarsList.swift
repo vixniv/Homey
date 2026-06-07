@@ -52,5 +52,5 @@ struct MemberAvatarsList: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }

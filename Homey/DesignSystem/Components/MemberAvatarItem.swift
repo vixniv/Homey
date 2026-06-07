@@ -65,5 +65,5 @@ struct MemberAvatarItem: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }

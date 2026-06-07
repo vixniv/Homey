@@ -112,5 +112,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }

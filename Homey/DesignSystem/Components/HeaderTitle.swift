@@ -47,5 +47,5 @@ struct HeaderTitle: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }

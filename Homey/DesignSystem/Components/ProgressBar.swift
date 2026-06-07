@@ -71,5 +71,5 @@ struct ProgressBar: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }

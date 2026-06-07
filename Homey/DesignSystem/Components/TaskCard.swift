@@ -308,5 +308,5 @@ struct TaskCardDemoView: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }

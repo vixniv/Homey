@@ -1,14 +1,13 @@
 //
-//  MemberAvatar.swift
-//  ChoreManagementApp
-//
-//  Created by Muhammad Saleh Bagir Alatas on 28/05/26.
+//  MemberAvatarItemSelectable.swift
+//  Homey
 //
 
 import SwiftUI
 
+// TODO: Review — unused; selectable avatar superseded by MemberAvatarsList. Revisit during the UI pass.
 struct MemberAvatarItemSelectable: View {
-    var householdMember: HouseholdMemberModel
+    var member: Member
     var highlighted = false
     @Binding var isSelected: Bool
 
@@ -21,38 +20,26 @@ struct MemberAvatarItemSelectable: View {
             Button {
                 action()
             } label: {
-                if let imageURL = householdMember.imageURL {
-                    // TODO: load image if imageURL is valid
-                } else {
-                    if isSelected {
-                        ZStack {
-                            Circle()
-                                .scaledToFit()
-                                .frame(width: width)
-                                .foregroundStyle(Color("AppPrimaryColor"))
-                            
-                            Circle()
-                                .scaledToFit()
-                                .frame(width: width/3)
-                                .foregroundStyle(.white)
-                        }
-                        
-                    } else {
-                        Image("EmptyProfileImage")
-                            .resizable()
-                            .scaledToFit()
+                if isSelected {
+                    ZStack {
+                        Circle()
                             .frame(width: width)
-                            .clipShape(Circle())
+                            .foregroundStyle(Color("AppPrimaryColor"))
+
+                        Circle()
+                            .frame(width: width / 3)
+                            .foregroundStyle(.white)
                     }
+                } else {
+                    Text(member.emoji)
+                        .font(.system(size: width * 0.5))
+                        .frame(width: width, height: width)
+                        .background(Circle().fill(Color.gray.opacity(0.15)))
                 }
             }
-            
-            //Text
-            VStack {
-                Text(householdMember.nickname)
-                    .foregroundStyle(.secondary)
-                Text("^[\(householdMember.numberOfTasks) task](inflect: true)")
-            }
+
+            Text(member.name)
+                .foregroundStyle(.secondary)
         }
     }
 }
@@ -60,9 +47,9 @@ struct MemberAvatarItemSelectable: View {
 #Preview {
     @Previewable @State var isSelected = false
 
-    MemberAvatarItemSelectable(householdMember: HouseholdMemberModel(nickname: "Ana"), isSelected: $isSelected, action: { isSelected.toggle() })
-}
-
-#Preview {
-    RootView()
+    MemberAvatarItemSelectable(
+        member: Member(id: UUID(), name: "Ana", emoji: "👧"),
+        isSelected: $isSelected,
+        action: { isSelected.toggle() }
+    )
 }

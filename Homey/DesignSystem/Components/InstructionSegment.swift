@@ -5,6 +5,11 @@
 
 import SwiftUI
 
+enum InstructionType {
+    case voiceNote
+    case notes
+}
+
 struct InstructionSegment: View {
     @Binding var selection: InstructionType
     var color: Color = .appPrimary

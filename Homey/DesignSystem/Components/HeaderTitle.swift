@@ -7,11 +7,10 @@
 
 import SwiftUI
 
+// TODO: Review — currently unused; the home header is rendered via navigationTitle. Revisit during the UI pass.
 struct HeaderTitle: View {
-    var name: String // name of the houshold member
+    var name: String // name of the household member
     let date: Date = Date.now
-    
-    @State private var tasksModel = TasksModel()
 
     var body: some View {
         HStack {

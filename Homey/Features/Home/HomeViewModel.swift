@@ -52,6 +52,10 @@ final class HomeViewModel {
         await reloadChores()
     }
 
+    func chore(for row: TaskItem) -> Chore? {
+        chores.first { $0.id == row.id }
+    }
+
     private func reloadChores() async {
         chores = await choreClient.allChores()
     }

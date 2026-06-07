@@ -7,7 +7,7 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var viewModel = HomeViewModel()
-    @State private var selectedTask: TaskItem?
+    @State private var selectedChore: Chore?
 
     var body: some View {
         NavigationStack {
@@ -31,7 +31,7 @@ struct HomeView: View {
                                 Task { await viewModel.grab(task) }
                             }
                             .onTapGesture {
-                                selectedTask = task
+                                selectedChore = viewModel.chore(for: task)
                             }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
@@ -86,8 +86,8 @@ struct HomeView: View {
                 .padding(.bottom, 8)
             }
             .padding()
-            .sheet(item: $selectedTask) { task in
-                DetailChoreView(task: task)
+            .sheet(item: $selectedChore) { chore in
+                DetailChoreView(chore: chore)
                     .presentationDragIndicator(.visible)
                     .presentationDetents([.medium, .large])
                     .interactiveDismissDisabled(false)

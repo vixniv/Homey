@@ -1,42 +1,30 @@
 //
 //  MemberAvatarsList.swift
-//  ChoreManagementApp
-//
-//  Created by Muhammad Saleh Bagir Alatas on 28/05/26.
+//  Homey
 //
 
 import SwiftUI
 
 struct MemberAvatarsList: View {
-    var user: HouseholdMemberModel
-    var householdMembers: [HouseholdMemberModel]
+    var members: [Member]
     var showDivider = true
-    
-    @Binding var selectedMemberId: UUID? // nil = "ALL"
-    
+
+    @Binding var selectedMemberId: UUID? // nil = "All"
+
     var body: some View {
         HStack(spacing: 15) {
-            // Tombol ALL
-            MemberAvatarItem(
-                householdMember: user, // atau buat "All" member khusus
-                highlighted: selectedMemberId == nil
-            )
-            .onTapGesture {
-                selectedMemberId = nil
-            }
-            
+            MemberAvatarItem(emoji: "👥", name: "All", highlighted: selectedMemberId == nil)
+                .onTapGesture { selectedMemberId = nil }
+
             if showDivider { Divider() }
-            
-            ForEach(householdMembers) { member in
-                if member.id != user.id {
-                    MemberAvatarItem(
-                        householdMember: member,
-                        highlighted: selectedMemberId == member.id
-                    )
-                    .onTapGesture {
-                        selectedMemberId = member.id
-                    }
-                }
+
+            ForEach(members) { member in
+                MemberAvatarItem(
+                    emoji: member.emoji,
+                    name: member.name,
+                    highlighted: selectedMemberId == member.id
+                )
+                .onTapGesture { selectedMemberId = member.id }
             }
         }
         .frame(height: 100)
@@ -45,12 +33,10 @@ struct MemberAvatarsList: View {
 
 #Preview {
     MemberAvatarsList(
-        user: HouseholdMemberModel.mockUser,
-        householdMembers: HouseholdMemberModel.mockMembers,
+        members: [
+            Member(id: UUID(), name: "Mom", emoji: "👩"),
+            Member(id: UUID(), name: "Ana", emoji: "👧"),
+        ],
         selectedMemberId: .constant(nil)
     )
-}
-
-#Preview {
-    RootView()
 }

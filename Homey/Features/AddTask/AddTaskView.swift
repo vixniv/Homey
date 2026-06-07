@@ -1,57 +1,45 @@
 //
 //  AddTaskView.swift
-//  Scoers
+//  Homey
 //
 
 import SwiftUI
 
 struct AddTaskView: View {
     @Environment(\.dismiss) private var dismiss
-
-    let tasksModel: TasksModel
-
-    @State private var task: TaskModel = {
-        var model = TaskModel()
-        model.assigneeId = nil
-        return model
-    }()
-
-    private let allMembers = HouseholdMemberModel.mockMembers
-
-    let onBack: (() -> Void)? = nil
+    @State private var viewModel = AddTaskViewModel()
 
     var body: some View {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    TextInputField(choreTitle: $task.title)
-                        .padding(.bottom, 10)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                TextInputField(choreTitle: $viewModel.title)
+                    .padding(.bottom, 10)
 
-                    Deadline(
-                        selectedDate: .constant(Date()),
-                        selectedTime: .constant(Date())
-                    )
-                        .padding(.bottom, 10)
+                Deadline(
+                    selectedDate: $viewModel.date,
+                    selectedTime: $viewModel.time
+                )
+                .padding(.bottom, 10)
 
-                    InstructionInput()
-                        .padding(.bottom, 10)
+                InstructionInput()
+                    .padding(.bottom, 10)
 
-                    assignToSection
-                        .padding(.bottom, 10)
+                assignToSection
+                    .padding(.bottom, 10)
 
-                    PrimaryButton(
-                        title: "Create Task",
-                        color: .appSecondary,
-                        action: createTask
-                    )
-                    .padding(.horizontal)
-                    .padding(.top, 8)
-                }
-                .padding(.vertical, 16)
+                PrimaryButton(
+                    title: "Create Task",
+                    color: .appSecondary,
+                    action: createTask
+                )
+                .padding(.horizontal)
+                .padding(.top, 8)
             }
-            .navigationToolbar(
-                title: "Add Task"
-            )
+            .padding(.vertical, 16)
         }
+        .navigationToolbar(title: "Add Task")
+        .task { await viewModel.load() }
+    }
 
     private var assignToSection: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -62,13 +50,9 @@ struct AddTaskView: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 MemberAvatarsList(
-                    user: HouseholdMemberModel.mockUser,
-                    householdMembers: allMembers,
+                    members: viewModel.members,
                     showDivider: false,
-                    selectedMemberId: Binding(
-                        get: { task.assigneeId },
-                        set: { task.assigneeId = $0 }
-                    )
+                    selectedMemberId: $viewModel.assigneeId
                 )
                 .padding(.horizontal)
             }
@@ -77,11 +61,15 @@ struct AddTaskView: View {
     }
 
     private func createTask() {
-        tasksModel.createTaskButtonTapped(form: task)
-        dismiss()
+        Task {
+            await viewModel.create()
+            dismiss()
+        }
     }
 }
 
 #Preview {
-    AddTaskView(tasksModel: TasksModel())
+    NavigationStack {
+        AddTaskView()
+    }
 }

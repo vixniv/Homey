@@ -34,13 +34,6 @@ actor InMemoryStore {
         chores.sorted { $0.dueDate < $1.dueDate }
     }
 
-    func chores(on date: Date) -> [Chore] {
-        let calendar = Calendar.current
-        return chores
-            .filter { calendar.isDate($0.dueDate, inSameDayAs: date) }
-            .sorted { $0.dueDate < $1.dueDate }
-    }
-
     func loadCompletions() -> [ChoreCompletion] { completions }
 
     // MARK: - Writes

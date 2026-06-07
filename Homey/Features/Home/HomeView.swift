@@ -1,59 +1,45 @@
 //
-//  HomeScreenView.swift
-//  Scoers
-//
-//  Created by Muhammad Saleh Bagir Alatas on 28/05/26.
+//  HomeView.swift
+//  Homey
 //
 
 import SwiftUI
 
 struct HomeView: View {
-
-    let user = HouseholdMemberModel.mockUser
-    let householdMembers = HouseholdMemberModel.mockMembers
-    let date = Date()
-    @State var choreViewMode: ChoreViewMode = .all
-    @State private var selectedMemberId: UUID? = nil
-    @State private var tasksModel = TasksModel()
-    @State private var selectedTask: TaskItem? = nil
-
-    private var visibleTasks: [TaskItem] {
-        guard let selectedId = selectedMemberId else {
-            return tasksModel.tasks
-        }
-        return tasksModel.tasks.filter { $0.assigneeId == selectedId }
-    }
+    @State private var viewModel = HomeViewModel()
+    @State private var selectedTask: TaskItem?
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     MemberAvatarsList(
-                        user: user,
-                        householdMembers: householdMembers,
-                        selectedMemberId: $selectedMemberId
+                        members: viewModel.members,
+                        selectedMemberId: $viewModel.selectedMemberId
                     )
-                    VStack(alignment: .leading, spacing: 4){
+                    VStack(alignment: .leading, spacing: 4) {
                         Text("Today's Chores")
                             .font(.title2.bold())
-                        Text(date.formatted(date: .complete, time: .omitted))
+                        Text(viewModel.selectedDate.formatted(date: .complete, time: .omitted))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
-                    
+
                     VStack(spacing: 12) {
-                        ForEach(visibleTasks) { task in
-                            TaskCard(task: task) { }
-                                .onTapGesture {
-                                    selectedTask = task
+                        ForEach(viewModel.rows) { task in
+                            TaskCard(task: task) {
+                                Task { await viewModel.grab(task) }
+                            }
+                            .onTapGesture {
+                                selectedTask = task
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    Task { await viewModel.delete(task) }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) {
-                                        tasksModel.taskSwipedToDelete(task)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
-                                }
+                            }
                         }
                     }
                 }
@@ -62,7 +48,7 @@ struct HomeView: View {
                 .padding(.bottom, 100)
             }
             .scrollIndicators(.hidden)
-            .navigationTitle(Text("Ana's Family House"))
+            .navigationTitle(viewModel.householdName)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -70,7 +56,7 @@ struct HomeView: View {
                         Image(systemName: "bell")
                             .imageScale(.medium)
                             .symbolRenderingMode(.hierarchical)
-                        }
+                    }
                 }
                 ToolbarSpacer(placement: .topBarTrailing)
                 ToolbarItem(placement: .topBarTrailing) {
@@ -81,11 +67,11 @@ struct HomeView: View {
                     }
                 }
             }
-            .safeAreaInset(edge: .bottom){
-                HStack{
+            .safeAreaInset(edge: .bottom) {
+                HStack {
                     Spacer()
-                    NavigationLink{
-                        AddTaskView(tasksModel: tasksModel)
+                    NavigationLink {
+                        AddTaskView()
                     } label: {
                         Image(systemName: "plus")
                             .font(.system(size: 22, weight: .semibold))
@@ -104,9 +90,11 @@ struct HomeView: View {
                 DetailChoreView(task: task)
                     .presentationDragIndicator(.visible)
                     .presentationDetents([.medium, .large])
-//                    .presentationBackgroundInteraction(.enabled(upThrough: .large))
                     .interactiveDismissDisabled(false)
             }
+        }
+        .onAppear {
+            Task { await viewModel.load() }
         }
     }
 }

@@ -89,6 +89,7 @@ struct DetailChoreView: View {
     NavigationStack {
         DetailChoreView(
             task: TaskItem(
+                id: UUID(),
                 title: "Clean the bathroom",
                 dueLabel: "Today Before 5:00 A.M",
                 state: .done,

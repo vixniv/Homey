@@ -9,7 +9,6 @@ import Foundation
 
 @DependencyClient
 struct ChoreClient: Sendable {
-    var choresForDate: @Sendable (_ date: Date) async -> [Chore] = { _ in [] }
     var allChores: @Sendable () async -> [Chore] = { [] }
     var completions: @Sendable () async -> [ChoreCompletion] = { [] }
     var create: @Sendable (_ chore: Chore) async -> Void
@@ -21,10 +20,6 @@ struct ChoreClient: Sendable {
 extension ChoreClient: DependencyKey {
     static var liveValue: ChoreClient {
         ChoreClient(
-            choresForDate: { date in
-                @Dependency(\.homeyStore) var store
-                return await store.chores(on: date)
-            },
             allChores: {
                 @Dependency(\.homeyStore) var store
                 return await store.allChores()

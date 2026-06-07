@@ -10,6 +10,11 @@ import Observation
 @MainActor
 @Observable
 final class HomeViewModel {
+    enum Scope: String, CaseIterable, Hashable {
+        case everyone = "Everyone"
+        case mine = "Mine"
+    }
+
     @ObservationIgnored @Dependency(\.choreClient) private var choreClient
     @ObservationIgnored @Dependency(\.householdClient) private var householdClient
     @ObservationIgnored @Dependency(\.date.now) private var now
@@ -18,16 +23,52 @@ final class HomeViewModel {
     var members: [Member] = []
     var currentMemberId: UUID?
     var selectedDate = Date()
-    var selectedMemberId: UUID?            // nil = everyone
+    var selectedMemberId: UUID?          // nil = everyone (toolbar filter)
+    var scope: Scope = .everyone         // Everyone / Mine segment
     private var chores: [Chore] = []
 
-    var rows: [TaskItem] {
-        let calendar = Calendar(identifier: .gregorian)
+    private let calendar = Calendar(identifier: .gregorian)
+
+    var currentMember: Member? {
+        members.first { $0.id == currentMemberId }
+    }
+
+    var monthTitle: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "LLLL"
+        return formatter.string(from: selectedDate)
+    }
+
+    var weekDays: [Date] {
+        let today = calendar.startOfDay(for: now)
+        let weekday = calendar.component(.weekday, from: today) // 1=Sun ... 7=Sat
+        let daysFromMonday = (weekday + 5) % 7
+        guard let monday = calendar.date(byAdding: .day, value: -daysFromMonday, to: today) else {
+            return [today]
+        }
+        return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: monday) }
+    }
+
+    private var choresOnSelectedDate: [Chore] {
         let target = calendar.startOfDay(for: selectedDate)
-        return chores
-            .filter { calendar.startOfDay(for: $0.dueDate) == target }
+        return chores.filter { calendar.startOfDay(for: $0.dueDate) == target }
+    }
+
+    var rows: [TaskItem] {
+        choresOnSelectedDate
+            .filter { scope == .everyone || $0.assigneeId == currentMemberId }
             .filter { selectedMemberId == nil || $0.assigneeId == selectedMemberId }
             .map(row(for:))
+    }
+
+    var progress: Double {
+        let day = choresOnSelectedDate
+        guard !day.isEmpty else { return 0 }
+        return Double(day.filter { $0.status == .done }.count) / Double(day.count)
+    }
+
+    func selectDate(_ date: Date) {
+        selectedDate = date
     }
 
     func load() async {

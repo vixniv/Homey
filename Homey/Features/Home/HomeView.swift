@@ -97,10 +97,10 @@ struct HomeView: View {
                     }
                 }
             }
-            .sheet(item: $selectedChore) { chore in
-                DetailChoreView(chore: chore)
-                    .presentationDragIndicator(.visible)
-                    .presentationDetents([.medium, .large])
+            .fullScreenCover(item: $selectedChore) { chore in
+                NavigationStack {
+                    DetailChoreView(chore: chore)
+                }
             }
         }
         .onAppear {

@@ -36,8 +36,12 @@ struct NewHomeView: View {
                 }
                 
                 Image(ImageResource.sadHomey)
-                PrimaryButton(title: "Start a new home", type: "secondary") {
-                    
+                NavigationLink {
+                    HomeNameForm()
+                } label: {
+                    PrimaryButton(title: "Start a new home", type: "secondary") {
+                        
+                    }
                 }
             }
             .padding()

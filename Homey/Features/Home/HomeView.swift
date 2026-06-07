@@ -58,34 +58,7 @@ struct HomeView: View {
                             .symbolRenderingMode(.hierarchical)
                     }
                 }
-                ToolbarSpacer(placement: .topBarTrailing)
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: ProfileView()) {
-                        Image(systemName: "person")
-                            .imageScale(.medium)
-                            .symbolRenderingMode(.hierarchical)
-                    }
-                }
             }
-            .safeAreaInset(edge: .bottom) {
-                HStack {
-                    Spacer()
-                    NavigationLink {
-                        AddTaskView()
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.system(size: 22, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 56, height: 56)
-                            .background(Color.appPrimary)
-                            .clipShape(Circle())
-                            .shadow(color: Color.appPrimary.opacity(0.4), radius: 12, x: 0, y: 6)
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 8)
-            }
-            .padding()
             .sheet(item: $selectedChore) { chore in
                 DetailChoreView(chore: chore)
                     .presentationDragIndicator(.visible)

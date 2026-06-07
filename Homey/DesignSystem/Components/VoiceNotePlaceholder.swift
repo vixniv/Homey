@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+// TODO: Review — placeholder with no recording logic; wire up real voice notes or remove.
 struct VoiceNotePlaceholder: View {
     var color: Color = Color.gray.opacity(0.3)
 

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: Review — unused since Chore Detail moved to a native toolbar. Remove or repurpose.
 struct TopNavBar: View {
     let title: String
     var leadingAction: (() -> Void)? = nil

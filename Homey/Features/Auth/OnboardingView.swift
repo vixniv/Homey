@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @State private var currentPage = 0
-    @State private var goToLogin = false
-
     var body: some View {
         VStack {
             NavigationStack{

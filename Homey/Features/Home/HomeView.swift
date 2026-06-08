@@ -21,23 +21,21 @@ struct HomeView: View {
                     onSelect: { viewModel.selectDate($0) }
                 )
 
-                HouseholdProgressCard(
-                    householdName: viewModel.householdName,
-                    memberEmojis: viewModel.members.map(\.emoji),
-                    progress: viewModel.progress
-                )
-
                 HStack {
                     Text("Tasks")
                         .font(.headline)
                     Spacer()
-                    Picker("Scope", selection: $viewModel.scope) {
-                        ForEach(HomeViewModel.Scope.allCases, id: \.self) { scope in
-                            Text(scope.rawValue).tag(scope)
+                    Menu {
+                        Picker("Filter", selection: $viewModel.selectedMemberId) {
+                            Text("Everyone").tag(UUID?.none)
+                            ForEach(viewModel.members) { member in
+                                Text("\(member.emoji) \(member.name)").tag(Optional(member.id))
+                            }
                         }
+                    } label: {
+                        Label(filterTitle, systemImage: "line.3.horizontal.decrease.circle")
+                            .font(.subheadline)
                     }
-                    .pickerStyle(.segmented)
-                    .frame(width: 170)
                 }
 
                 if viewModel.rows.isEmpty {
@@ -77,19 +75,6 @@ struct HomeView: View {
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Picker("Filter", selection: $viewModel.selectedMemberId) {
-                        Text("Everyone").tag(UUID?.none)
-                        ForEach(viewModel.members) { member in
-                            Text("\(member.emoji) \(member.name)").tag(Optional(member.id))
-                        }
-                    }
-                } label: {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                        .symbolRenderingMode(.hierarchical)
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink(destination: NotificationView()) {
                     Image(systemName: "bell")
                         .symbolRenderingMode(.hierarchical)
@@ -104,6 +89,14 @@ struct HomeView: View {
         .onAppear {
             Task { await viewModel.load() }
         }
+    }
+
+    private var filterTitle: String {
+        guard let id = viewModel.selectedMemberId,
+              let member = viewModel.members.first(where: { $0.id == id }) else {
+            return "Everyone"
+        }
+        return "\(member.emoji) \(member.name)"
     }
 
     private var greetingTitle: String {

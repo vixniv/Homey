@@ -14,71 +14,75 @@ struct DetailChoreView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            TopNavBar(title: "Chore Detail", leadingAction: {
-                dismiss()
-            })
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(viewModel.chore.title)
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.primary)
+                    .padding(.bottom, -8)
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(viewModel.chore.title)
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.primary)
-                        .padding(.bottom, -8)
+                ChoreHouseLabel(houseName: viewModel.householdName)
 
-                    ChoreHouseLabel(houseName: viewModel.householdName)
+                ChoreStatusBadge(
+                    state: viewModel.state,
+                    completedDate: viewModel.completion?.completedAt
+                )
 
-                    ChoreStatusBadge(
-                        state: viewModel.state,
-                        completedDate: viewModel.completion?.completedAt
-                    )
-
-                    if !viewModel.chore.notes.isEmpty {
-                        ChoreNotesCard(notes: viewModel.chore.notes)
-                    }
-
-                    HStack(spacing: 12) {
-                        ChoreDateCard(date: viewModel.chore.dueDate)
-                        ChoreDeadlineCard(
-                            deadlineTime: viewModel.chore.dueDate,
-                            earlyNote: nil
-                        )
-                    }
-
-                    if viewModel.state == .done, let completedBy = viewModel.completedBy {
-                        ChoreCompletedByCard(
-                            memberName: completedBy.name,
-                            memberInitials: completedBy.emoji,
-                            subtitle: "Finished the task"
-                        )
-                    }
-
-                    if let assignee = viewModel.assignee {
-                        ChoreAssigneeCard(
-                            memberName: assignee.name,
-                            memberInitials: assignee.emoji,
-                            subtitle: "Primary assignee"
-                        )
-                    }
-
-                    if viewModel.state != .done {
-                        PrimaryButton(
-                            title: viewModel.state == .available ? "Grab this chore" : "Mark as done"
-                        ) {
-                            Task {
-                                await viewModel.primaryAction()
-                                dismiss()
-                            }
-                        }
-                        .padding(.top, 16)
-                    }
+                if !viewModel.chore.notes.isEmpty {
+                    ChoreNotesCard(notes: viewModel.chore.notes)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                .padding(.bottom, 32)
+
+                HStack(spacing: 12) {
+                    ChoreDateCard(date: viewModel.chore.dueDate)
+                    ChoreDeadlineCard(
+                        deadlineTime: viewModel.chore.dueDate,
+                        earlyNote: nil
+                    )
+                }
+
+                if viewModel.state == .done, let completedBy = viewModel.completedBy {
+                    ChoreCompletedByCard(
+                        memberName: completedBy.name,
+                        memberInitials: completedBy.emoji,
+                        subtitle: "Finished the task"
+                    )
+                }
+
+                if let assignee = viewModel.assignee {
+                    ChoreAssigneeCard(
+                        memberName: assignee.name,
+                        memberInitials: assignee.emoji,
+                        subtitle: "Primary assignee"
+                    )
+                }
+
+                if viewModel.state != .done {
+                    PrimaryButton(
+                        title: viewModel.state == .available ? "Grab this chore" : "Mark as done"
+                    ) {
+                        Task {
+                            await viewModel.primaryAction()
+                            dismiss()
+                        }
+                    }
+                    .padding(.top, 16)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 32)
+        }
+        .navigationTitle("Chore Detail")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                }
             }
         }
-        .navigationBarBackButtonHidden(true)
         .task { await viewModel.load() }
     }
 }

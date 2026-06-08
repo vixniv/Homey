@@ -10,21 +10,43 @@ struct HomeView: View {
     @State private var selectedChore: Chore?
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    MemberAvatarsList(
-                        members: viewModel.members,
-                        selectedMemberId: $viewModel.selectedMemberId
-                    )
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Today's Chores")
-                            .font(.title2.bold())
-                        Text(viewModel.selectedDate.formatted(date: .complete, time: .omitted))
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(viewModel.monthTitle)
+                    .font(.title3.weight(.semibold))
 
+                DayStripView(
+                    days: viewModel.weekDays,
+                    selectedDate: viewModel.selectedDate,
+                    onSelect: { viewModel.selectDate($0) }
+                )
+
+                HStack {
+                    Text("Tasks")
+                        .font(.headline)
+                    Spacer()
+                    Menu {
+                        Picker("Filter", selection: $viewModel.selectedMemberId) {
+                            Text("Everyone").tag(UUID?.none)
+                            ForEach(viewModel.members) { member in
+                                Text("\(member.emoji) \(member.name)").tag(Optional(member.id))
+                            }
+                        }
+                    } label: {
+                        Label(filterTitle, systemImage: "line.3.horizontal.decrease.circle")
+                            .font(.subheadline)
+                    }
+                }
+
+                if viewModel.rows.isEmpty {
+                    ContentUnavailableView(
+                        "No chores",
+                        systemImage: "checkmark.circle",
+                        description: Text("Nothing scheduled for this day.")
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 40)
+                } else {
                     VStack(spacing: 12) {
                         ForEach(viewModel.rows) { task in
                             TaskCard(task: task) {
@@ -43,59 +65,51 @@ struct HomeView: View {
                         }
                     }
                 }
-                .padding(.horizontal)
-                .padding(.top, 8)
-                .padding(.bottom, 100)
             }
-            .scrollIndicators(.hidden)
-            .navigationTitle(viewModel.householdName)
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: NotificationView()) {
-                        Image(systemName: "bell")
-                            .imageScale(.medium)
-                            .symbolRenderingMode(.hierarchical)
-                    }
-                }
-                ToolbarSpacer(placement: .topBarTrailing)
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: ProfileView()) {
-                        Image(systemName: "person")
-                            .imageScale(.medium)
-                            .symbolRenderingMode(.hierarchical)
-                    }
+            .padding(.horizontal)
+            .padding(.top, 8)
+            .padding(.bottom, 100)
+        }
+        .scrollIndicators(.hidden)
+        .navigationTitle(greetingTitle)
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink(destination: NotificationView()) {
+                    Image(systemName: "bell")
+                        .symbolRenderingMode(.hierarchical)
                 }
             }
-            .safeAreaInset(edge: .bottom) {
-                HStack {
-                    Spacer()
-                    NavigationLink {
-                        AddTaskView()
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.system(size: 22, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 56, height: 56)
-                            .background(Color.appPrimary)
-                            .clipShape(Circle())
-                            .shadow(color: Color.appPrimary.opacity(0.4), radius: 12, x: 0, y: 6)
-                    }
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink(destination: ProfileView()) {
+                    Image(systemName: "person.crop.circle")
+                        .symbolRenderingMode(.hierarchical)
                 }
-                .padding(.horizontal)
-                .padding(.bottom, 8)
             }
-            .padding()
-            .sheet(item: $selectedChore) { chore in
+        }
+        .fullScreenCover(item: $selectedChore) { chore in
+            NavigationStack {
                 DetailChoreView(chore: chore)
-                    .presentationDragIndicator(.visible)
-                    .presentationDetents([.medium, .large])
-                    .interactiveDismissDisabled(false)
             }
         }
         .onAppear {
             Task { await viewModel.load() }
         }
+    }
+
+    private var filterTitle: String {
+        guard let id = viewModel.selectedMemberId,
+              let member = viewModel.members.first(where: { $0.id == id }) else {
+            return "Everyone"
+        }
+        return "\(member.emoji) \(member.name)"
+    }
+
+    private var greetingTitle: String {
+        if let name = viewModel.currentMember?.name {
+            return "Hi, \(name) 👋"
+        }
+        return viewModel.householdName
     }
 }
 

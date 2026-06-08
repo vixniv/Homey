@@ -10,6 +10,7 @@ enum InstructionType {
     case notes
 }
 
+// TODO: Review — unused; could be replaced by a native Picker(.segmented).
 struct InstructionSegment: View {
     @Binding var selection: InstructionType
     var color: Color = .appPrimary

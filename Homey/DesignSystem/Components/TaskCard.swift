@@ -159,15 +159,13 @@ struct GrabButton: View {
         Button(action: action) {
             HStack(spacing: 4) {
                 Text("Grab it")
-                    .font(.system(size: 16, weight: .medium))
-//                Image(systemName: "hand.tap")
-//                    .font(.system(size: 16))
+                    .font(.system(size: 14, weight: .semibold))
             }
             .foregroundColor(.white)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 7)
             .background(.appPrimary)
-            .clipShape(Capsule())
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.button, style: .continuous))
             .scaleEffect(isPressed ? 0.95 : 1.0)
             .animation(.spring(response: 0.25, dampingFraction: 0.6), value: isPressed)
         }

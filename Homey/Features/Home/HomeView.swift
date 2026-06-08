@@ -80,6 +80,12 @@ struct HomeView: View {
                         .symbolRenderingMode(.hierarchical)
                 }
             }
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink(destination: ProfileView()) {
+                    Image(systemName: "person.crop.circle")
+                        .symbolRenderingMode(.hierarchical)
+                }
+            }
         }
         .fullScreenCover(item: $selectedChore) { chore in
             NavigationStack {

@@ -110,7 +110,7 @@ struct ProfileView: View {
             
             VStack(spacing: 0) {
                 // Manage Household Members
-                NavigationLink(destination: Text("Manage Members")) {
+                NavigationLink(destination: ManageMemberView()) {
                     HStack(spacing: 14) {
                         Image(systemName: "person.2.fill")
                             .font(.system(size: 18))
@@ -155,7 +155,7 @@ struct ProfileView: View {
                 Divider().padding(.leading, 58)
                 
                 // Notification
-                NavigationLink(destination: Text("Notifications")) {
+                NavigationLink(destination: NotificationView()) {
                     SettingsRow(
                         icon: "bell.fill",
                         iconColor: .blue,

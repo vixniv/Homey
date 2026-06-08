@@ -7,19 +7,21 @@
 
 import SwiftUI
 
-struct LoginView: View {
+struct SignInView: View {
     
     @State private var emailStr = ""
     @State private var passwordStr = ""
-    @State private var confirmPasswordStr = ""
+    @State private var rememberMe = false
     
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
+            
+            Spacer()
+            Spacer()
             
             Text("Create Your Scheduled, Organized House Chores")
                 .font(.title)
                 .multilineTextAlignment(.center)
-                .padding(.top, 50)
                 .fixedSize(horizontal: false, vertical: true)
             
             VStack(alignment: .leading) {
@@ -27,23 +29,19 @@ struct LoginView: View {
                 TextField("Enter your email here", text: $emailStr)
                     .textFieldStyle()
             }
-            .padding(.bottom)
             
             VStack(alignment: .leading) {
                 Text("Password")
                 TextField("Enter your password here", text: $passwordStr)
                     .textFieldStyle()
             }
-            .padding(.bottom)
             
-            VStack(alignment: .leading){
-                Text("Confirm password")
-                TextField("Confirm your password here", text: $confirmPasswordStr)
-                    .textFieldStyle()
+            HStack {
+                Checkbox(isOn: $rememberMe, diameter: 24)
+                Text("Remember me")
+                Spacer()
             }
-            .padding(.bottom, 32)
-            
-            PrimaryButton(title: "Sign Up") {
+            PrimaryButton(title: "Sign in") {
                 
             }
             
@@ -89,5 +87,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    SignInView()
 }

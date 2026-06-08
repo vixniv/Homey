@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomeNameForm: View {
+struct NewHomeNameFormView: View {
     @State private var homeName: String = ""
     
     @State private var isShowingNextPage = false
@@ -37,13 +37,13 @@ struct HomeNameForm: View {
             
         }
         .navigationDestination(isPresented: $isShowingNextPage) {
-            AddHomeMembers()
+            InviteHomeMembersView()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        HomeNameForm()
+        NewHomeNameFormView()
     }
 }

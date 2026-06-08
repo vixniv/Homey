@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddHomeMembers: View {
+struct InviteHomeMembersView: View {
     
     @State private var isShowingNextPage = false
     
@@ -59,6 +59,6 @@ struct AddHomeMembers: View {
 
 #Preview {
     NavigationStack {
-        AddHomeMembers()
+        InviteHomeMembersView()
     }
 }

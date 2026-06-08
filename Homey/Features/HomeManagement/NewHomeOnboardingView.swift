@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NewHomeView: View {
+struct NewHomeOnboardingView: View {
     
     @State private var isShowingNextPage = false
     
@@ -43,7 +43,7 @@ struct NewHomeView: View {
                     isShowingNextPage = true
                 }
                 .navigationDestination(isPresented: $isShowingNextPage) {
-                    HomeNameForm()
+                    NewHomeNameFormView()
                 }
             }
             .padding()
@@ -55,6 +55,6 @@ struct NewHomeView: View {
 
 #Preview {
     NavigationStack {
-        NewHomeView()
+        NewHomeOnboardingView()
     }
 }

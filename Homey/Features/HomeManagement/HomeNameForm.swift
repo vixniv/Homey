@@ -10,6 +10,8 @@ import SwiftUI
 struct HomeNameForm: View {
     @State private var homeName: String = ""
     
+    @State private var isShowingNextPage = false
+    
     var body: some View {
         VStack {
             Text("What's your home called?")
@@ -24,12 +26,18 @@ struct HomeNameForm: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar{
             ToolbarItem(placement: .topBarTrailing) {
-                PrimaryButton(title: "Next") {}
+                PrimaryButton(title: "Next") {
+                    isShowingNextPage = true
+                }
             }
         }
         .padding()
         .onSubmit {
             // TODO: Review — wire up home creation (createHome was undefined on main)
+            
+        }
+        .navigationDestination(isPresented: $isShowingNextPage) {
+            AddHomeMembers()
         }
     }
 }

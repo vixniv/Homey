@@ -43,6 +43,7 @@ struct SignInView: View {
             }
             PrimaryButton(title: "Sign in") {
                 // TODO: Sign in logic
+                
             }
             
             HStack {

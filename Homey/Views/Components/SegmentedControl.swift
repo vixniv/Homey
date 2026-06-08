@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct SegmentedControl: View {
-    @Binding var selection: ChoreViewMode //selection
-    
+    @Binding var selectedIndex: Int
+    let options: [String]
     let cornerRadius: Double = 30
     
-    let color1: Color = Color(.gray.opacity(0.2))
-    let color2: Color = Color(.white)
+    let color1: Color = Color(.gray.opacity(0.1))
+    let color2: Color = Color(.appPrimary)
     
     var body: some View {
         ZStack{
@@ -21,40 +21,33 @@ struct SegmentedControl: View {
                 .foregroundStyle(color1)
                 
             HStack {
-                Button {
-                    selection = .all
-                } label: {
-                    ZStack {
-                        if selection == .all {
-                            RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundStyle(color2)
+                ForEach(options.indices, id: \.self) { index in
+                    Button {
+                        selectedIndex = index
+                    } label: {
+                        ZStack {
+                            if selectedIndex == index {
+                                RoundedRectangle(cornerRadius: cornerRadius)
+                                    .foregroundStyle(color2)
+                                Text(options[index])
+                                    .foregroundStyle(Color.white)
+                            }
+                            
+                            if selectedIndex == index {
+                                Text(options[index])
+                                    .foregroundStyle(Color.white)
+                                    .bold()
+                            } else {
+                                Text(options[index])
+                                    .bold()
+                                    .foregroundStyle(.black .opacity(0.7))
+                                    .padding(.vertical, 8)
+                                    .frame(maxWidth: .infinity)
+                            }
                         }
-                        
-                        Text("Household chores")
-                            .bold()
-                            .foregroundStyle(.black)
-                            .padding(.vertical, 8)
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-                Button {
-                    selection = .myself
-                } label: {
-                    ZStack {
-                        if selection == .myself {
-                            RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundStyle(color2)
-                        }
-                        
-                        Text("My chores")
-                            .bold()
-                            .foregroundStyle(.black)
-                            .padding(.vertical, 8)
-                            .frame(maxWidth: .infinity)
                     }
                 }
             }
-            .padding(2)
             
         }
         .frame(maxWidth: .infinity)
@@ -63,9 +56,9 @@ struct SegmentedControl: View {
 }
 
 #Preview {
-    @Previewable @State var selectedItem: ChoreViewMode = .all
+    @Previewable @State var selected = 0
     
-    SegmentedControl(selection: $selectedItem)
+    SegmentedControl(selectedIndex: $selected, options: ["All", "Unread"])
         .padding()
 }
 

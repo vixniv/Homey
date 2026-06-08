@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - Model
 
-struct HouseholdMember: Identifiable {
+struct HouseholdManageMember: Identifiable {
     let id = UUID()
     let name: String
 
@@ -27,11 +27,11 @@ struct HouseholdMember: Identifiable {
 struct ManageMemberView: View {
     @Environment(\.dismiss) private var dismiss
 
-    @State private var members: [HouseholdMember] = [
-        HouseholdMember(name: "Mom"),
-        HouseholdMember(name: "Ana"),
-        HouseholdMember(name: "Dad"),
-        HouseholdMember(name: "Ama")
+    @State private var members: [HouseholdManageMember] = [
+        HouseholdManageMember(name: "Mom"),
+        HouseholdManageMember(name: "Ana"),
+        HouseholdManageMember(name: "Dad"),
+        HouseholdManageMember(name: "Ama")
     ]
 
     @State private var swipedMemberID: UUID? = nil
@@ -129,7 +129,7 @@ struct ManageMemberView: View {
 // MARK: - Member Row View
 
 struct MemberRowView: View {
-    let member: HouseholdMember
+    let member: HouseholdManageMember
     let isSwipedOpen: Bool
     let onSwipe: () -> Void
     let onDelete: () -> Void

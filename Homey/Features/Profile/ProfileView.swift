@@ -26,35 +26,33 @@ struct ProfileView: View {
     ]
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 24) {
-                    
-                    // MARK: Avatar + Name
-                    avatarSection
-                    
-                    // MARK: Stats Row
-                    statsRow
-                    
-                    // MARK: Household Section
-                    householdSection
-                    
-                    // MARK: Account & Settings
-                    accountSection
-                    
-                    // MARK: Sign Out
-                    signOutButton
-                    
-                    Spacer(minLength: 32)
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 12)
+        ScrollView {
+            VStack(spacing: 24) {
+
+                // MARK: Avatar + Name
+                avatarSection
+
+                // MARK: Stats Row
+                statsRow
+
+                // MARK: Household Section
+                householdSection
+
+                // MARK: Account & Settings
+                accountSection
+
+                // MARK: Sign Out
+                signOutButton
+
+                Spacer(minLength: 32)
             }
-            .background(Color(.systemGroupedBackground))
-            .navigationToolbar(
-                title: "Profile"
-            )
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
         }
+        .background(Color(.systemGroupedBackground))
+        .navigationToolbar(
+            title: "Profile"
+        )
     }
     
     // MARK: - Avatar Section
@@ -308,5 +306,7 @@ struct SettingsRow: View {
 // MARK: - Preview
 
 #Preview {
-    ProfileView()
+    NavigationStack {
+        ProfileView()
+    }
 }

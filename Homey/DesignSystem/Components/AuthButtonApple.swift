@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO: Review — replace with SignInWithAppleButton from AuthenticationServices; a custom Apple
+// sign-in button violates Apple's guidelines. Auth is out of scope for the current refactor.
 struct AuthButtonApple: View {
     var type: String?
     var color: Color = Color("AppPrimaryColor")

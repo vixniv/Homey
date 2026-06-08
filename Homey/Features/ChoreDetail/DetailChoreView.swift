@@ -2,97 +2,102 @@
 //  DetailChoreView.swift
 //  Homey
 //
-//  Created by Yoram on 05/06/26.
-//
 
 import SwiftUI
 
 struct DetailChoreView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var viewModel: ChoreDetailViewModel
 
-    let task: TaskItem
-
-    // Demo data — replace with real model properties later
-    private var houseName: String { "Ana's Family House" }
-    private var notes: String { "Don't forget to change the bedsheets and mop the floor ya." }
-    private var completedDate: Date { Date() }
-    private var choreDate: Date { Date() }
-    private var deadlineTime: Date { Date() }
-    private var earlyNote: String? { task.state == .done ? "Done 30 min early" : nil }
-    private var completedByName: String { "Ana" }
-    private var completedByInitials: String { task.assigneeInitials.isEmpty ? "AN" : task.assigneeInitials }
+    init(chore: Chore) {
+        _viewModel = State(initialValue: ChoreDetailViewModel(chore: chore))
+    }
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Top navigation bar
-            TopNavBar(title: "Chore Detail", leadingAction: {
-                dismiss()
-            })
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(viewModel.chore.title)
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.primary)
+                    .padding(.bottom, -8)
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    // Chore title
-                    Text(task.title)
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.primary)
-                        .padding(.bottom, -8)
+                ChoreHouseLabel(houseName: viewModel.householdName)
 
-                    // House label
-                    ChoreHouseLabel(houseName: houseName)
+                ChoreStatusBadge(
+                    state: viewModel.state,
+                    completedDate: viewModel.completion?.completedAt
+                )
 
-                    // Status badge
-                    ChoreStatusBadge(
-                        state: task.state,
-                        completedDate: task.state == .done ? completedDate : nil
-                    )
-
-                    // Notes card
-                    ChoreNotesCard(notes: notes)
-
-                    // Date & deadline cards
-                    HStack(spacing: 12) {
-                        ChoreDateCard(date: choreDate)
-                        ChoreDeadlineCard(
-                            deadlineTime: deadlineTime,
-                            earlyNote: earlyNote
-                        )
-                    }
-
-                    // Completed by card (only for done tasks)
-                    if task.state == .done {
-                        ChoreCompletedByCard(
-                            memberName: completedByName,
-                            memberInitials: completedByInitials,
-                            subtitle: "Finished the task"
-                        )
-                    }
-                    
-                    ChoreAssigneeCard(
-                        memberName: "Mom",
-                        memberInitials: "MO",
-                        subtitle: "Primary asignee"
-                    )
-                    
-                    PrimaryButton(title: "Grab this chore"){}
-                        .padding(.top, 16)
+                if !viewModel.chore.notes.isEmpty {
+                    ChoreNotesCard(notes: viewModel.chore.notes)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                .padding(.bottom, 32)
+
+                HStack(spacing: 12) {
+                    ChoreDateCard(date: viewModel.chore.dueDate)
+                    ChoreDeadlineCard(
+                        deadlineTime: viewModel.chore.dueDate,
+                        earlyNote: nil
+                    )
+                }
+
+                if viewModel.state == .done, let completedBy = viewModel.completedBy {
+                    ChoreCompletedByCard(
+                        memberName: completedBy.name,
+                        memberInitials: completedBy.emoji,
+                        subtitle: "Finished the task"
+                    )
+                }
+
+                if let assignee = viewModel.assignee {
+                    ChoreAssigneeCard(
+                        memberName: assignee.name,
+                        memberInitials: assignee.emoji,
+                        subtitle: "Primary assignee"
+                    )
+                }
+
+                if viewModel.state != .done {
+                    PrimaryButton(
+                        title: viewModel.state == .available ? "Grab this chore" : "Mark as done"
+                    ) {
+                        Task {
+                            await viewModel.primaryAction()
+                            dismiss()
+                        }
+                    }
+                    .padding(.top, 16)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 32)
+        }
+        .navigationTitle("Chore Detail")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                }
             }
         }
-        .navigationBarBackButtonHidden(true)
+        .task { await viewModel.load() }
     }
 }
 
 #Preview {
     NavigationStack {
         DetailChoreView(
-            task: TaskItem(
+            chore: Chore(
+                id: UUID(),
+                householdId: UUID(),
                 title: "Clean the bathroom",
-                dueLabel: "Today Before 5:00 A.M",
-                state: .done,
-                assigneeInitials: "MO"
+                notes: "Don't forget the bedsheets.",
+                assigneeId: nil,
+                dueDate: Date(),
+                status: .available
             )
         )
     }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: Review — reimplements Picker(.segmented); replace the NotificationView usage with the native control.
 struct SegmentedControl: View {
     @Binding var selectedIndex: Int
     let options: [String]

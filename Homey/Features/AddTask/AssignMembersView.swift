@@ -1,22 +1,21 @@
 //
 //  AssignMembersView.swift
-//  Scoers
-//
-//  Created by Muhammad Saleh Bagir Alatas on 28/05/26.
+//  Homey
 //
 
 import SwiftUI
 
+// TODO: Review — unused; assignment is handled by MemberAvatarsList in AddTask. Revisit during the UI pass.
 struct AssignMembersView: View {
-    
-    var householdMembers = HouseholdMemberModel.mockMembers
-    
+
+    var members: [Member] = []
+
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Assign to")
             HStack(spacing: 20) {
-                ForEach(householdMembers){ member in
-                    MemberAvatarItemSelectable(householdMember: member, isSelected: .constant(false), action: {})
+                ForEach(members) { member in
+                    MemberAvatarItemSelectable(member: member, isSelected: .constant(false), action: {})
                 }
             }
         }
@@ -24,5 +23,5 @@ struct AssignMembersView: View {
 }
 
 #Preview {
-    AssignMembersView()
+    AssignMembersView(members: [Member(id: UUID(), name: "Ana", emoji: "👧")])
 }

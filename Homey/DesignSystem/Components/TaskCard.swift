@@ -12,7 +12,7 @@ enum TaskState {
 // MARK: - task model
 
 struct TaskItem: Identifiable {
-    let id = UUID()
+    let id: UUID
     var title: String
     var dueLabel: String
     var state: TaskState = .available
@@ -159,15 +159,13 @@ struct GrabButton: View {
         Button(action: action) {
             HStack(spacing: 4) {
                 Text("Grab it")
-                    .font(.system(size: 16, weight: .medium))
-//                Image(systemName: "hand.tap")
-//                    .font(.system(size: 16))
+                    .font(.system(size: 14, weight: .semibold))
             }
             .foregroundColor(.white)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 7)
             .background(.appPrimary)
-            .clipShape(Capsule())
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.button, style: .continuous))
             .scaleEffect(isPressed ? 0.95 : 1.0)
             .animation(.spring(response: 0.25, dampingFraction: 0.6), value: isPressed)
         }
@@ -278,10 +276,10 @@ struct CameraButton: View {
 
 struct TaskCardDemoView: View {
     @State private var tasks: [TaskItem] = [
-        TaskItem(title: "Wash dishes", dueLabel: "Before 5:00 A.M", state: .available),
-        TaskItem(title: "Clean bathroom", dueLabel: "Before 5:00 A.M", state: .inProgress, assigneeInitials: "MO"),
-        TaskItem(title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .done, assigneeInitials: "AN"),
-        TaskItem(title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .late, assigneeInitials: "AN")
+        TaskItem(id: UUID(), title: "Wash dishes", dueLabel: "Before 5:00 A.M", state: .available),
+        TaskItem(id: UUID(), title: "Clean bathroom", dueLabel: "Before 5:00 A.M", state: .inProgress, assigneeInitials: "MO"),
+        TaskItem(id: UUID(), title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .done, assigneeInitials: "AN"),
+        TaskItem(id: UUID(), title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .late, assigneeInitials: "AN")
     ]
 
     var body: some View {

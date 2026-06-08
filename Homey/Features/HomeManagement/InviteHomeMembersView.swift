@@ -7,7 +7,10 @@
 
 import SwiftUI
 
-struct AddHomeMembers: View {
+struct InviteHomeMembersView: View {
+    
+    @State private var isShowingNextPage = false
+    
     var body: some View {
         VStack() {
             VStack{
@@ -43,15 +46,19 @@ struct AddHomeMembers: View {
             ToolbarItem {
                 PrimaryButton(title: "Finish") {
                     // TODO: finish function
+                    isShowingNextPage = true
                 }
             }
         }
         .padding()
+        .navigationDestination(isPresented: $isShowingNextPage) {
+            HomeView()
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        AddHomeMembers()
+        InviteHomeMembersView()
     }
 }

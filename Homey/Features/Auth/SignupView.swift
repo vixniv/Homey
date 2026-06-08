@@ -44,7 +44,7 @@ struct SignupView: View {
             .padding(.bottom, 32)
             
             PrimaryButton(title: "Sign Up") {
-                
+                // TODO: Sign up logic
             }
             
             HStack {
@@ -73,10 +73,10 @@ struct SignupView: View {
             
             HStack {
                 Text("Already have an account?")
-                Button {
-                    
+                NavigationLink {
+                    SignInView()
                 } label: {
-                    Text("Login")
+                    Text("Sign in")
                         .underline()
                 }
             }
@@ -84,11 +84,14 @@ struct SignupView: View {
             Spacer()
         }
         .padding()
+        .navigationBarBackButtonHidden()
     }
 }
 
 
 
 #Preview {
-    SignupView()
+    NavigationStack {
+        SignupView()
+    }
 }

@@ -63,5 +63,7 @@ struct OnboardingViewInvitation: View {
 }
 
 #Preview {
-    OnboardingViewInvitation()
+    NavigationStack {
+        OnboardingViewInvitation()
+    }
 }

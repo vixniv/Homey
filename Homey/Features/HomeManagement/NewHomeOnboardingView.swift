@@ -7,7 +7,10 @@
 
 import SwiftUI
 
-struct NewHomeView: View {
+struct NewHomeOnboardingView: View {
+    
+    @State private var isShowingNextPage = false
+    
     var body: some View {
         ZStack {
             LinearGradient(colors: [.white, Color("AppPrimaryColor")], startPoint: .top, endPoint: .bottom)
@@ -30,18 +33,17 @@ struct NewHomeView: View {
                         Text("You seem not to have been to any house yet.")
                             .foregroundStyle(.primary)
                             .padding()
-                            
+                        
                     }
                     .frame(width: 230, height: 100)
                 }
                 
                 Image(ImageResource.sadHomey)
-                NavigationLink {
-                    HomeNameForm()
-                } label: {
-                    PrimaryButton(title: "Start a new home", type: "secondary") {
-                        
-                    }
+                PrimaryButton(title: "Start a new home", type: "secondary") {
+                    isShowingNextPage = true
+                }
+                .navigationDestination(isPresented: $isShowingNextPage) {
+                    NewHomeNameFormView()
                 }
             }
             .padding()
@@ -52,5 +54,7 @@ struct NewHomeView: View {
 }
 
 #Preview {
-    NewHomeView()
+    NavigationStack {
+        NewHomeOnboardingView()
+    }
 }

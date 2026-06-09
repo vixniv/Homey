@@ -34,8 +34,8 @@ struct MemberAvatarsList: View {
 #Preview {
     MemberAvatarsList(
         members: [
-            Member(id: UUID(), name: "Mom", emoji: "👩"),
-            Member(id: UUID(), name: "Ana", emoji: "👧"),
+            Member(id: UUID(), householdId: UUID(), name: "Mom", emoji: "👩"),
+            Member(id: UUID(), householdId: UUID(), name: "Ana", emoji: "👧"),
         ],
         selectedMemberId: .constant(nil)
     )

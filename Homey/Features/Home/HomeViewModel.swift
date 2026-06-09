@@ -94,7 +94,7 @@ final class HomeViewModel {
             state = .done
         } else if chore.dueDate < now {
             state = .late
-        } else if chore.status == .inProgress || chore.status == .assigned {
+        } else if chore.status == .inProgress {
             state = .inProgress
         } else {
             state = .available

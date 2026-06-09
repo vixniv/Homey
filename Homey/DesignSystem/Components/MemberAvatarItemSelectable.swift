@@ -48,7 +48,7 @@ struct MemberAvatarItemSelectable: View {
     @Previewable @State var isSelected = false
 
     MemberAvatarItemSelectable(
-        member: Member(id: UUID(), name: "Ana", emoji: "👧"),
+        member: Member(id: UUID(), householdId: UUID(), name: "Ana", emoji: "👧"),
         isSelected: $isSelected,
         action: { isSelected.toggle() }
     )

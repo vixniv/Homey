@@ -27,7 +27,7 @@ final class ChoreDetailViewModel {
     var state: TaskState {
         if chore.status == .done { return .done }
         if chore.dueDate < now { return .late }
-        if chore.status == .inProgress || chore.status == .assigned { return .inProgress }
+        if chore.status == .inProgress { return .inProgress }
         return .available
     }
 

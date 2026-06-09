@@ -9,7 +9,7 @@ import Foundation
 
 @DependencyClient
 struct HouseholdClient: Sendable {
-    var household: @Sendable () async -> Household = { Household(id: UUID(), name: "", memberIds: []) }
+    var household: @Sendable () async -> Household = { Household(id: UUID(), name: "") }
     var members: @Sendable () async -> [Member] = { [] }
     var currentMemberId: @Sendable () async -> UUID = { UUID() }
 }

@@ -14,15 +14,9 @@ struct HouseholdClient: Sendable {
     var currentMemberId: @Sendable () async throws -> UUID
 }
 
-extension HouseholdClient: DependencyKey {
-    /// TEMPORARY: keeps the app compiling. A later task moves `liveValue`
-    /// to Supabase/SupabaseHouseholdClient.swift and deletes it from here.
-    static var liveValue: HouseholdClient { inMemoryValue }
-
-    static var previewValue: HouseholdClient { inMemoryValue }
-}
-
 extension HouseholdClient {
+    static var previewValue: HouseholdClient { inMemoryValue }
+
     /// In-memory implementation backing previews and tests.
     static var inMemoryValue: HouseholdClient {
         HouseholdClient(

@@ -10,19 +10,25 @@ import Observation
 @MainActor
 @Observable
 final class HomeViewModel {
-    @ObservationIgnored @Dependency(\.choreClient) private var choreClient
-    @ObservationIgnored @Dependency(\.householdClient) private var householdClient
+    @ObservationIgnored @Dependency(\.householdStore) private var store
     @ObservationIgnored @Dependency(\.date.now) private var now
 
-    var householdName = ""
-    var members: [Member] = []
-    var currentMemberId: UUID?
     var selectedDate = Date()
     var selectedMemberId: UUID?          // nil = everyone (list-header filter)
-    var errorMessage: String?
-    private var chores: [Chore] = []
 
     private let calendar = Calendar(identifier: .gregorian)
+
+    // MARK: - Read-through to the store (do NOT cache — keeps Observation live)
+
+    var householdName: String { store.householdName }
+    var members: [Member] { store.members }
+    var currentMemberId: UUID? { store.currentMemberId }
+    private var chores: [Chore] { store.chores }
+
+    var errorMessage: String? {
+        get { store.errorMessage }
+        set { store.errorMessage = newValue }
+    }
 
     var currentMember: Member? {
         members.first { $0.id == currentMemberId }
@@ -59,56 +65,35 @@ final class HomeViewModel {
         selectedDate = date
     }
 
+    // MARK: - Lifecycle & mutations (delegated to the store)
+
     func load() async {
-        do {
-            async let household = householdClient.household()
-            async let members = householdClient.members()
-            async let currentMemberId = householdClient.currentMemberId()
-            async let chores = choreClient.allChores()
-            self.householdName = try await household.name
-            self.members = try await members
-            self.currentMemberId = try await currentMemberId
-            self.chores = try await chores
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+        await store.load()
     }
 
     func refresh() async {
-        await load()
+        await store.load()
     }
 
     func grab(_ row: TaskItem) async {
         guard let me = currentMemberId else { return }
-        do {
-            try await choreClient.grab(choreId: row.id, by: me)
-            try await reloadChores()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+        await store.grab(choreId: row.id, by: me)
     }
 
     func delete(_ row: TaskItem) async {
-        do {
-            try await choreClient.delete(choreId: row.id)
-            try await reloadChores()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+        await store.delete(choreId: row.id)
     }
 
     func chore(for row: TaskItem) -> Chore? {
         chores.first { $0.id == row.id }
     }
 
-    private func reloadChores() async throws {
-        chores = try await choreClient.allChores()
-    }
-
     private func row(for chore: Chore) -> TaskItem {
         let state: TaskState
         if chore.status == .done {
             state = .done
+        } else if chore.assigneeId == nil {
+            state = .available          // unassigned chores are always grabbable
         } else if chore.dueDate < now {
             state = .late
         } else if chore.status == .inProgress {

@@ -37,20 +37,15 @@ struct Deadline: View {
 
             // Date + Time pills
             HStack(spacing: 12) {
-                DatePill(label: dateFormatter.string(from: selectedDate)) {
+                DatePill(label: dateFormatter.string(from: selectedDate), current: selectedDate) {
                     selectedDate = $0
                 }
 
-                TimePill(label: timeFormatter.string(from: selectedTime)) {
+                TimePill(label: timeFormatter.string(from: selectedTime), current: selectedTime) {
                     selectedTime = $0
                 }
             }
 
-            // Info bullets
-            VStack(alignment: .leading, spacing: 6) {
-                InfoBullet(text: "Reminder sent 3 hours before")
-                InfoBullet(text: "Auto-assign 2 hours before")
-            }
         }
         .padding(.horizontal)
     }
@@ -60,6 +55,7 @@ struct Deadline: View {
 
 private struct DatePill: View {
     let label: String
+    let current: Date
     let onSelect: (Date) -> Void
 
     @State private var showPicker = false
@@ -67,7 +63,7 @@ private struct DatePill: View {
 
     var body: some View {
         Button {
-            draft = Date()
+            draft = current
             showPicker = true
         } label: {
             Text(label)
@@ -97,6 +93,7 @@ private struct DatePill: View {
 
 private struct TimePill: View {
     let label: String
+    let current: Date
     let onSelect: (Date) -> Void
 
     @State private var showPicker = false
@@ -104,7 +101,7 @@ private struct TimePill: View {
 
     var body: some View {
         Button {
-            draft = Date()
+            draft = current
             showPicker = true
         } label: {
             Text(label)
@@ -169,23 +166,6 @@ private struct DatePickerSheet: View {
         } else {
             SwiftUI.DatePicker("", selection: $selection, displayedComponents: .hourAndMinute)
                 .datePickerStyle(.wheel)
-        }
-    }
-}
-
-// MARK: - Info Bullet
-
-private struct InfoBullet: View {
-    let text: String
-
-    var body: some View {
-        HStack(spacing: 8) {
-            Circle()
-                .fill(Color.appPrimary)
-                .frame(width: 8, height: 8)
-            Text(text)
-                .font(.system(size: 14, weight: .regular))
-                .foregroundColor(Color(.systemGray))
         }
     }
 }

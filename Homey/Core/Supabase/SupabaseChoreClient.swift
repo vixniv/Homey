@@ -61,6 +61,13 @@ extension ChoreClient: DependencyKey {
                 .delete()
                 .eq("id", value: choreId.uuidString)
                 .execute()
+        },
+        update: { chore in
+            _ = try await SupabaseClientProvider.shared
+                .from("chores")
+                .update(chore)
+                .eq("id", value: chore.id.uuidString)
+                .execute()
         }
     )
 }

@@ -15,6 +15,7 @@ struct ChoreClient: Sendable {
     var grab: @Sendable (_ choreId: UUID, _ by: UUID) async throws -> Void
     var finish: @Sendable (_ choreId: UUID, _ by: UUID, _ at: Date) async throws -> Void
     var delete: @Sendable (_ choreId: UUID) async throws -> Void
+    var update: @Sendable (_ chore: Chore) async throws -> Void
 }
 
 extension ChoreClient {
@@ -46,6 +47,10 @@ extension ChoreClient {
             delete: { choreId in
                 @Dependency(\.homeyStore) var store
                 await store.delete(choreId: choreId)
+            },
+            update: { chore in
+                @Dependency(\.homeyStore) var store
+                await store.update(chore)
             }
         )
     }

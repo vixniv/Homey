@@ -62,6 +62,11 @@ actor InMemoryStore {
     func delete(choreId: UUID) {
         chores.removeAll { $0.id == choreId }
     }
+
+    func update(_ chore: Chore) {
+        guard let index = chores.firstIndex(where: { $0.id == chore.id }) else { return }
+        chores[index] = chore
+    }
 }
 
 // MARK: - Dependency

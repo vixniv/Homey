@@ -8,6 +8,7 @@ import SwiftUI
 struct DetailChoreView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: ChoreDetailViewModel
+    @State private var isEditing = false
 
     init(chore: Chore) {
         _viewModel = State(initialValue: ChoreDetailViewModel(chore: chore))
@@ -82,8 +83,16 @@ struct DetailChoreView: View {
                     Image(systemName: "xmark")
                 }
             }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Edit") { isEditing = true }
+            }
         }
         .task { await viewModel.load() }
+        .sheet(isPresented: $isEditing) {
+            NavigationStack {
+                TaskFormView(mode: .edit(viewModel.chore))
+            }
+        }
         .alert(
             "Something went wrong",
             isPresented: Binding(

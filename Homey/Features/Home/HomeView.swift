@@ -71,6 +71,20 @@ struct HomeView: View {
             .padding(.bottom, 100)
         }
         .scrollIndicators(.hidden)
+        .refreshable {
+            await viewModel.refresh()
+        }
+        .alert(
+            "Something went wrong",
+            isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
         .navigationTitle(greetingTitle)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {

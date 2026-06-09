@@ -27,7 +27,7 @@ struct MainScene: View {
         }
         .sheet(isPresented: $isAddTaskPresented) {
             NavigationStack {
-                AddTaskView()
+                TaskFormView(mode: .create)
             }
         }
     }

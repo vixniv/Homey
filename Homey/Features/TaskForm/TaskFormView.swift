@@ -1,13 +1,16 @@
 //
-//  AddTaskView.swift
+//  TaskFormView.swift
 //  Homey
-//
 
 import SwiftUI
 
-struct AddTaskView: View {
+struct TaskFormView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel = AddTaskViewModel()
+    @State private var viewModel: TaskFormViewModel
+
+    init(mode: TaskFormViewModel.Mode = .create) {
+        _viewModel = State(initialValue: TaskFormViewModel(mode: mode))
+    }
 
     var body: some View {
         ScrollView {
@@ -28,16 +31,16 @@ struct AddTaskView: View {
                     .padding(.bottom, 10)
 
                 PrimaryButton(
-                    title: "Create Task",
+                    title: viewModel.ctaTitle,
                     color: .appSecondary,
-                    action: createTask
+                    action: save
                 )
                 .padding(.horizontal)
                 .padding(.top, 8)
             }
             .padding(.vertical, 16)
         }
-        .navigationToolbar(title: "Add Task")
+        .navigationToolbar(title: viewModel.navTitle)
         .task { await viewModel.load() }
         .alert(
             "Something went wrong",
@@ -71,9 +74,9 @@ struct AddTaskView: View {
         .frame(maxWidth: .infinity)
     }
 
-    private func createTask() {
+    private func save() {
         Task {
-            if await viewModel.create() {
+            if await viewModel.save() {
                 dismiss()
             }
         }
@@ -82,6 +85,6 @@ struct AddTaskView: View {
 
 #Preview {
     NavigationStack {
-        AddTaskView()
+        TaskFormView()
     }
 }

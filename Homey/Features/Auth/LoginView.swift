@@ -10,7 +10,6 @@ struct LoginView: View {
 
     @State private var emailStr = ""
     @State private var passwordStr = ""
-    @State private var confirmPasswordStr = ""
 
     var body: some View {
         VStack {

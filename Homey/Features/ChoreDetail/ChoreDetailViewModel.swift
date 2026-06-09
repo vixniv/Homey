@@ -19,6 +19,7 @@ final class ChoreDetailViewModel {
     var assignee: Member?
     var completedBy: Member?
     var completion: ChoreCompletion?
+    var errorMessage: String?
 
     init(chore: Chore) {
         self.chore = chore
@@ -32,28 +33,36 @@ final class ChoreDetailViewModel {
     }
 
     func load() async {
-        async let household = householdClient.household()
-        async let members = householdClient.members()
-        async let completions = choreClient.completions()
+        do {
+            async let household = householdClient.household()
+            async let members = householdClient.members()
+            async let completions = choreClient.completions()
 
-        householdName = await household.name
-        let memberList = await members
-        let completionList = await completions
+            householdName = try await household.name
+            let memberList = try await members
+            let completionList = try await completions
 
-        assignee = memberList.first { $0.id == chore.assigneeId }
-        completion = completionList.first { $0.choreId == chore.id }
-        completedBy = memberList.first { $0.id == completion?.completedBy }
+            assignee = memberList.first { $0.id == chore.assigneeId }
+            completion = completionList.first { $0.choreId == chore.id }
+            completedBy = memberList.first { $0.id == completion?.completedBy }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     func primaryAction() async {
-        let me = await householdClient.currentMemberId()
-        switch state {
-        case .available:
-            await choreClient.grab(chore.id, me)
-        case .inProgress, .late:
-            await choreClient.finish(chore.id, me, now)
-        case .done:
-            break
+        do {
+            let me = try await householdClient.currentMemberId()
+            switch state {
+            case .available:
+                try await choreClient.grab(choreId: chore.id, by: me)
+            case .inProgress, .late:
+                try await choreClient.finish(choreId: chore.id, by: me, at: now)
+            case .done:
+                break
+            }
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 }

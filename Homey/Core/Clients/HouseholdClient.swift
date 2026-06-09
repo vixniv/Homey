@@ -9,13 +9,22 @@ import Foundation
 
 @DependencyClient
 struct HouseholdClient: Sendable {
-    var household: @Sendable () async -> Household = { Household(id: UUID(), name: "") }
-    var members: @Sendable () async -> [Member] = { [] }
-    var currentMemberId: @Sendable () async -> UUID = { UUID() }
+    var household: @Sendable () async throws -> Household
+    var members: @Sendable () async throws -> [Member]
+    var currentMemberId: @Sendable () async throws -> UUID
 }
 
 extension HouseholdClient: DependencyKey {
-    static var liveValue: HouseholdClient {
+    /// TEMPORARY: keeps the app compiling. A later task moves `liveValue`
+    /// to Supabase/SupabaseHouseholdClient.swift and deletes it from here.
+    static var liveValue: HouseholdClient { inMemoryValue }
+
+    static var previewValue: HouseholdClient { inMemoryValue }
+}
+
+extension HouseholdClient {
+    /// In-memory implementation backing previews and tests.
+    static var inMemoryValue: HouseholdClient {
         HouseholdClient(
             household: {
                 @Dependency(\.homeyStore) var store
@@ -31,7 +40,6 @@ extension HouseholdClient: DependencyKey {
             }
         )
     }
-    static var previewValue: HouseholdClient { liveValue }
 }
 
 extension DependencyValues {

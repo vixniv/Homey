@@ -62,8 +62,9 @@ struct AddTaskView: View {
 
     private func createTask() {
         Task {
-            await viewModel.create()
-            dismiss()
+            if await viewModel.create() {
+                dismiss()
+            }
         }
     }
 }

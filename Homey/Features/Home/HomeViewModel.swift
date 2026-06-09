@@ -19,6 +19,7 @@ final class HomeViewModel {
     var currentMemberId: UUID?
     var selectedDate = Date()
     var selectedMemberId: UUID?          // nil = everyone (list-header filter)
+    var errorMessage: String?
     private var chores: [Chore] = []
 
     private let calendar = Calendar(identifier: .gregorian)
@@ -59,33 +60,49 @@ final class HomeViewModel {
     }
 
     func load() async {
-        async let household = householdClient.household()
-        async let members = householdClient.members()
-        async let currentMemberId = householdClient.currentMemberId()
-        async let chores = choreClient.allChores()
-        self.householdName = await household.name
-        self.members = await members
-        self.currentMemberId = await currentMemberId
-        self.chores = await chores
+        do {
+            async let household = householdClient.household()
+            async let members = householdClient.members()
+            async let currentMemberId = householdClient.currentMemberId()
+            async let chores = choreClient.allChores()
+            self.householdName = try await household.name
+            self.members = try await members
+            self.currentMemberId = try await currentMemberId
+            self.chores = try await chores
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func refresh() async {
+        await load()
     }
 
     func grab(_ row: TaskItem) async {
         guard let me = currentMemberId else { return }
-        await choreClient.grab(row.id, me)
-        await reloadChores()
+        do {
+            try await choreClient.grab(choreId: row.id, by: me)
+            try await reloadChores()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     func delete(_ row: TaskItem) async {
-        await choreClient.delete(row.id)
-        await reloadChores()
+        do {
+            try await choreClient.delete(choreId: row.id)
+            try await reloadChores()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     func chore(for row: TaskItem) -> Chore? {
         chores.first { $0.id == row.id }
     }
 
-    private func reloadChores() async {
-        chores = await choreClient.allChores()
+    private func reloadChores() async throws {
+        chores = try await choreClient.allChores()
     }
 
     private func row(for chore: Chore) -> TaskItem {

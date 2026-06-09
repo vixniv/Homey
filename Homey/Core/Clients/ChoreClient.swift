@@ -9,16 +9,25 @@ import Foundation
 
 @DependencyClient
 struct ChoreClient: Sendable {
-    var allChores: @Sendable () async -> [Chore] = { [] }
-    var completions: @Sendable () async -> [ChoreCompletion] = { [] }
-    var create: @Sendable (_ chore: Chore) async -> Void
-    var grab: @Sendable (_ choreId: UUID, _ memberId: UUID) async -> Void
-    var finish: @Sendable (_ choreId: UUID, _ memberId: UUID, _ at: Date) async -> Void
-    var delete: @Sendable (_ choreId: UUID) async -> Void
+    var allChores: @Sendable () async throws -> [Chore]
+    var completions: @Sendable () async throws -> [ChoreCompletion]
+    var create: @Sendable (_ chore: Chore) async throws -> Void
+    var grab: @Sendable (_ choreId: UUID, _ by: UUID) async throws -> Void
+    var finish: @Sendable (_ choreId: UUID, _ by: UUID, _ at: Date) async throws -> Void
+    var delete: @Sendable (_ choreId: UUID) async throws -> Void
 }
 
 extension ChoreClient: DependencyKey {
-    static var liveValue: ChoreClient {
+    /// TEMPORARY: keeps the app compiling. A later task moves `liveValue`
+    /// to Supabase/SupabaseChoreClient.swift and deletes it from here.
+    static var liveValue: ChoreClient { inMemoryValue }
+
+    static var previewValue: ChoreClient { inMemoryValue }
+}
+
+extension ChoreClient {
+    /// In-memory implementation backing previews and tests.
+    static var inMemoryValue: ChoreClient {
         ChoreClient(
             allChores: {
                 @Dependency(\.homeyStore) var store
@@ -46,7 +55,6 @@ extension ChoreClient: DependencyKey {
             }
         )
     }
-    static var previewValue: ChoreClient { liveValue }
 }
 
 extension DependencyValues {

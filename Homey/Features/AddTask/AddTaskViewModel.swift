@@ -19,6 +19,7 @@ final class AddTaskViewModel {
     var notes = ""
     var assigneeId: UUID?
     var members: [Member] = []
+    var errorMessage: String?
 
     private var householdId: UUID?
 
@@ -27,12 +28,17 @@ final class AddTaskViewModel {
     }
 
     func load() async {
-        members = await householdClient.members()
-        householdId = await householdClient.household().id
+        do {
+            members = try await householdClient.members()
+            householdId = try await householdClient.household().id
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
-    func create() async {
-        guard let householdId else { return }
+    /// Returns true on success so the view can dismiss.
+    func create() async -> Bool {
+        guard let householdId else { return false }
         let chore = Chore(
             id: UUID(),
             householdId: householdId,
@@ -43,7 +49,13 @@ final class AddTaskViewModel {
             recurrence: .once,
             status: assigneeId == nil ? .available : .inProgress
         )
-        await choreClient.create(chore)
+        do {
+            try await choreClient.create(chore)
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
     }
 
     private func combine(date: Date, time: Date) -> Date {

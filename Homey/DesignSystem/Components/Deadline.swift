@@ -46,11 +46,6 @@ struct Deadline: View {
                 }
             }
 
-            // Info bullets
-            VStack(alignment: .leading, spacing: 6) {
-                InfoBullet(text: "Reminder sent 3 hours before")
-                InfoBullet(text: "Auto-assign 2 hours before")
-            }
         }
         .padding(.horizontal)
     }
@@ -169,23 +164,6 @@ private struct DatePickerSheet: View {
         } else {
             SwiftUI.DatePicker("", selection: $selection, displayedComponents: .hourAndMinute)
                 .datePickerStyle(.wheel)
-        }
-    }
-}
-
-// MARK: - Info Bullet
-
-private struct InfoBullet: View {
-    let text: String
-
-    var body: some View {
-        HStack(spacing: 8) {
-            Circle()
-                .fill(Color.appPrimary)
-                .frame(width: 8, height: 8)
-            Text(text)
-                .font(.system(size: 14, weight: .regular))
-                .foregroundColor(Color(.systemGray))
         }
     }
 }

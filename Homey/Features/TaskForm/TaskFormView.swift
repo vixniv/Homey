@@ -24,7 +24,7 @@ struct TaskFormView: View {
                 )
                 .padding(.bottom, 10)
 
-                InstructionInput()
+                InstructionInput(text: $viewModel.notes)
                     .padding(.bottom, 10)
 
                 assignToSection

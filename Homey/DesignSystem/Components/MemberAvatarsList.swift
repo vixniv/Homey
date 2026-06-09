@@ -24,7 +24,9 @@ struct MemberAvatarsList: View {
                     name: member.name,
                     highlighted: selectedMemberId == member.id
                 )
-                .onTapGesture { selectedMemberId = member.id }
+                .onTapGesture {
+                    selectedMemberId = (selectedMemberId == member.id) ? nil : member.id
+                }
             }
         }
         .frame(height: 100)

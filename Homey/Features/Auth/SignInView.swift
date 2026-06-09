@@ -1,52 +1,62 @@
 //
-//  SignUpPage.swift
+//  SignInView.swift
 //  Homey
-//
-//  Created by Muhammad Saleh Bagir Alatas on 03/06/26.
 //
 
 import SwiftUI
 
-struct SignupView: View {
-    
+struct SignInView: View {
+    /// Demo entry, injected by the auth gate. Defaults to a no-op so the
+    /// screen can also be reached from the sign-up link / invitation flow.
+    var onDemo: () -> Void = {}
+
     @State private var emailStr = ""
     @State private var passwordStr = ""
-    @State private var confirmPasswordStr = ""
-    
+    @State private var rememberMe = false
+
     var body: some View {
-        VStack {
-            
+        VStack(spacing: 16) {
+
+            Spacer()
+            Spacer()
+
             Text("Create Your Scheduled, Organized House Chores")
                 .font(.title)
                 .multilineTextAlignment(.center)
-                .padding(.top, 50)
                 .fixedSize(horizontal: false, vertical: true)
-            
+
+            PrimaryButton(title: "Try Demo") {
+                onDemo()
+            }
+            .padding(.top, 8)
+
+            Text("Explore a ready-made household with members and chores.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
             VStack(alignment: .leading) {
                 Text("Email")
                 TextField("Enter your email here", text: $emailStr)
                     .textFieldStyle()
             }
-            .padding(.bottom)
-            
+
             VStack(alignment: .leading) {
                 Text("Password")
                 TextField("Enter your password here", text: $passwordStr)
                     .textFieldStyle()
             }
-            .padding(.bottom)
-            
-            VStack(alignment: .leading){
-                Text("Confirm password")
-                TextField("Confirm your password here", text: $confirmPasswordStr)
-                    .textFieldStyle()
+
+            HStack {
+                Checkbox(isOn: $rememberMe, diameter: 24)
+                Text("Remember me")
+                Spacer()
             }
-            .padding(.bottom, 32)
-            
-            PrimaryButton(title: "Sign Up") {
-                // TODO: Sign up logic
+
+            PrimaryButton(title: "Sign in") {
+                // TODO: Sign in logic
             }
-            
+
             HStack {
                 Rectangle()
                     .frame(width: 100, height: 0.5)
@@ -58,29 +68,28 @@ struct SignupView: View {
                     .opacity(0.5)
             }
             .padding(.vertical)
-            
+
             AuthButtonGoogle {
-                
+
             }
-            
+
             AuthButtonApple {
-                
+
             }
-            
-            
+
             Spacer()
             Spacer()
-            
+
             HStack {
-                Text("Already have an account?")
+                Text("Don't have an account?")
                 NavigationLink {
-                    SignInView()
+                    SignupView()
                 } label: {
-                    Text("Sign in")
+                    Text("Sign up")
                         .underline()
                 }
             }
-            
+
             Spacer()
         }
         .padding()
@@ -88,10 +97,8 @@ struct SignupView: View {
     }
 }
 
-
-
 #Preview {
     NavigationStack {
-        SignupView()
+        SignInView()
     }
 }

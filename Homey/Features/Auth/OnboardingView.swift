@@ -26,7 +26,7 @@ struct OnboardingView: View {
                 Spacer()
 
                 NavigationLink {
-                    LoginView(onDemo: onDemo)
+                    SignInView(onDemo: onDemo)
                 } label: {
                     Text("Start")
                         .font(.title2)

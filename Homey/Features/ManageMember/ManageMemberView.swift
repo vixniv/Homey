@@ -37,92 +37,78 @@ struct ManageMemberView: View {
     @State private var swipedMemberID: UUID? = nil
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color(UIColor.systemGroupedBackground)
-                    .ignoresSafeArea()
+        ZStack {
+            Color(UIColor.systemGroupedBackground)
+                .ignoresSafeArea()
 
-                VStack(spacing: 0) {
-                    // Member list
-                    ScrollView {
-                        VStack(spacing: 12) {
-                            ForEach(members) { member in
-                                MemberRowView(
-                                    member: member,
-                                    isSwipedOpen: swipedMemberID == member.id,
-                                    onSwipe: {
-                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                                            swipedMemberID = swipedMemberID == member.id ? nil : member.id
-                                        }
-                                    },
-                                    onDelete: {
-                                        withAnimation(.easeInOut(duration: 0.3)) {
-                                            members.removeAll { $0.id == member.id }
-                                            swipedMemberID = nil
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.top, 20)
-                        .padding(.bottom, 24)
-                    }
-                    .simultaneousGesture(
-                        TapGesture().onEnded {
-                            if swipedMemberID != nil {
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                    swipedMemberID = nil
-                                }
-                            }
-                        }
-                    )
-
-                    Divider()
-                        .opacity(0)
-
-                    // Invite buttons
+            VStack(spacing: 0) {
+                // Member list
+                ScrollView {
                     VStack(spacing: 12) {
-                        Button(action: {}) {
-                            Text("Invite via QR code")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 52)
-                                .background(Color(hex: "#4AAEE8"))
-                                .clipShape(Capsule())
-                        }
-
-                        Button(action: {}) {
-                            Text("Invite via link")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(Color(UIColor.label))
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 52)
-                                .background(Color(UIColor.secondarySystemGroupedBackground))
-                                .clipShape(Capsule())
+                        ForEach(members) { member in
+                            MemberRowView(
+                                member: member,
+                                isSwipedOpen: swipedMemberID == member.id,
+                                onSwipe: {
+                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                        swipedMemberID = swipedMemberID == member.id ? nil : member.id
+                                    }
+                                },
+                                onDelete: {
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        members.removeAll { $0.id == member.id }
+                                        swipedMemberID = nil
+                                    }
+                                }
+                            )
                         }
                     }
                     .padding(.horizontal, 16)
-                    .padding(.vertical, 20)
-                    .background(Color(UIColor.systemGroupedBackground))
+                    .padding(.top, 20)
+                    .padding(.bottom, 24)
                 }
-            }
-            .navigationTitle("Manage Household Member")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .medium))
+                .simultaneousGesture(
+                    TapGesture().onEnded {
+                        if swipedMemberID != nil {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                swipedMemberID = nil
+                            }
+                        }
+                    }
+                )
+
+                Divider()
+                    .opacity(0)
+
+                // Invite buttons
+                VStack(spacing: 12) {
+                    Button(action: {}) {
+                        Text("Invite via QR code")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 52)
+                            .background(Color(hex: "#4AAEE8"))
+                            .clipShape(Capsule())
+                    }
+
+                    Button(action: {}) {
+                        Text("Invite via link")
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(Color(UIColor.label))
-                            .padding(8)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 52)
                             .background(Color(UIColor.secondarySystemGroupedBackground))
-                            .clipShape(Circle())
+                            .clipShape(Capsule())
                     }
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 20)
+                .background(Color(UIColor.systemGroupedBackground))
             }
         }
+        .navigationTitle("Manage Household Member")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

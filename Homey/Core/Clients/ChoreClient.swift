@@ -17,15 +17,9 @@ struct ChoreClient: Sendable {
     var delete: @Sendable (_ choreId: UUID) async throws -> Void
 }
 
-extension ChoreClient: DependencyKey {
-    /// TEMPORARY: keeps the app compiling. A later task moves `liveValue`
-    /// to Supabase/SupabaseChoreClient.swift and deletes it from here.
-    static var liveValue: ChoreClient { inMemoryValue }
-
-    static var previewValue: ChoreClient { inMemoryValue }
-}
-
 extension ChoreClient {
+    static var previewValue: ChoreClient { inMemoryValue }
+
     /// In-memory implementation backing previews and tests.
     static var inMemoryValue: ChoreClient {
         ChoreClient(

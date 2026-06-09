@@ -2,15 +2,15 @@
 //  OnboardingView.swift
 //  Homey
 //
-//  Created by Nadila Rizky Amelia on 03/06/26.
-//
 
 import SwiftUI
 
 struct OnboardingView: View {
+    let onDemo: () -> Void
+
     var body: some View {
-        VStack {
-            NavigationStack{
+        NavigationStack {
+            VStack {
                 Spacer()
                 Image("logo1")
                     .padding(.bottom, 20)
@@ -24,9 +24,9 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
 
                 Spacer()
-                
-                NavigationLink{
-                    SignInView()
+
+                NavigationLink {
+                    SignInView(onDemo: onDemo)
                 } label: {
                     Text("Start")
                         .font(.title2)
@@ -45,5 +45,5 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView()
+    OnboardingView(onDemo: {})
 }

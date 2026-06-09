@@ -10,7 +10,8 @@ struct HomeView: View {
     @State private var selectedChore: Chore?
 
     var body: some View {
-        ScrollView {
+        List {
+            // Header: month + week strip + tasks filter (one non-swipeable row)
             VStack(alignment: .leading, spacing: 16) {
                 Text(viewModel.monthTitle)
                     .font(.title3.weight(.semibold))
@@ -37,40 +38,68 @@ struct HomeView: View {
                             .font(.subheadline)
                     }
                 }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .listRowBackground(Color.clear)
 
-                if viewModel.rows.isEmpty {
-                    ContentUnavailableView(
-                        "No chores",
-                        systemImage: "checkmark.circle",
-                        description: Text("Nothing scheduled for this day.")
-                    )
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 40)
-                } else {
-                    VStack(spacing: 12) {
-                        ForEach(viewModel.rows) { task in
-                            TaskCard(task: task) {
-                                Task { await viewModel.grab(task) }
-                            }
-                            .onTapGesture {
-                                selectedChore = viewModel.chore(for: task)
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    Task { await viewModel.delete(task) }
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
+            if viewModel.rows.isEmpty {
+                ContentUnavailableView(
+                    "No chores",
+                    systemImage: "checkmark.circle",
+                    description: Text("Nothing scheduled for this day.")
+                )
+                .frame(maxWidth: .infinity)
+                .padding(.top, 40)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowBackground(Color.clear)
+            } else {
+                ForEach(viewModel.rows) { task in
+                    TaskCard(task: task) {
+                        Task { await viewModel.grab(task) }
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selectedChore = viewModel.chore(for: task)
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                    .listRowBackground(Color.clear)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            Task { await viewModel.delete(task) }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
             }
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 100)
+
+            // Bottom spacer so the last card clears the floating "+" button.
+            Color.clear
+                .frame(height: 80)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
         .scrollIndicators(.hidden)
+        .refreshable {
+            await viewModel.refresh()
+        }
+        .alert(
+            "Something went wrong",
+            isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
         .navigationTitle(greetingTitle)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {

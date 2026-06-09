@@ -9,13 +9,16 @@ import Foundation
 
 @DependencyClient
 struct HouseholdClient: Sendable {
-    var household: @Sendable () async -> Household = { Household(id: UUID(), name: "", memberIds: []) }
-    var members: @Sendable () async -> [Member] = { [] }
-    var currentMemberId: @Sendable () async -> UUID = { UUID() }
+    var household: @Sendable () async throws -> Household
+    var members: @Sendable () async throws -> [Member]
+    var currentMemberId: @Sendable () async throws -> UUID
 }
 
-extension HouseholdClient: DependencyKey {
-    static var liveValue: HouseholdClient {
+extension HouseholdClient {
+    static var previewValue: HouseholdClient { inMemoryValue }
+
+    /// In-memory implementation backing previews and tests.
+    static var inMemoryValue: HouseholdClient {
         HouseholdClient(
             household: {
                 @Dependency(\.homeyStore) var store
@@ -31,7 +34,6 @@ extension HouseholdClient: DependencyKey {
             }
         )
     }
-    static var previewValue: HouseholdClient { liveValue }
 }
 
 extension DependencyValues {

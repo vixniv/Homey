@@ -23,5 +23,5 @@ struct AssignMembersView: View {
 }
 
 #Preview {
-    AssignMembersView(members: [Member(id: UUID(), name: "Ana", emoji: "👧")])
+    AssignMembersView(members: [Member(id: UUID(), householdId: UUID(), name: "Ana", emoji: "👧")])
 }

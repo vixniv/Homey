@@ -8,5 +8,8 @@ import Foundation
 struct Household: Identifiable, Hashable, Sendable, Codable {
     let id: UUID
     var name: String
-    var memberIds: [UUID]
+
+    enum CodingKeys: String, CodingKey {
+        case id, name
+    }
 }

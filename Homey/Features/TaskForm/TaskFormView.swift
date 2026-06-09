@@ -1,13 +1,16 @@
 //
-//  AddTaskView.swift
+//  TaskFormView.swift
 //  Homey
-//
 
 import SwiftUI
 
-struct AddTaskView: View {
+struct TaskFormView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel = AddTaskViewModel()
+    @State private var viewModel: TaskFormViewModel
+
+    init(mode: TaskFormViewModel.Mode = .create) {
+        _viewModel = State(initialValue: TaskFormViewModel(mode: mode))
+    }
 
     var body: some View {
         ScrollView {
@@ -21,24 +24,35 @@ struct AddTaskView: View {
                 )
                 .padding(.bottom, 10)
 
-                InstructionInput()
+                InstructionInput(text: $viewModel.notes)
                     .padding(.bottom, 10)
 
                 assignToSection
                     .padding(.bottom, 10)
 
                 PrimaryButton(
-                    title: "Create Task",
+                    title: viewModel.ctaTitle,
                     color: .appSecondary,
-                    action: createTask
+                    action: save
                 )
                 .padding(.horizontal)
                 .padding(.top, 8)
             }
             .padding(.vertical, 16)
         }
-        .navigationToolbar(title: "Add Task")
+        .navigationToolbar(title: viewModel.navTitle)
         .task { await viewModel.load() }
+        .alert(
+            "Something went wrong",
+            isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
     }
 
     private var assignToSection: some View {
@@ -60,16 +74,17 @@ struct AddTaskView: View {
         .frame(maxWidth: .infinity)
     }
 
-    private func createTask() {
+    private func save() {
         Task {
-            await viewModel.create()
-            dismiss()
+            if await viewModel.save() {
+                dismiss()
+            }
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        AddTaskView()
+        TaskFormView()
     }
 }

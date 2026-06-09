@@ -24,7 +24,9 @@ struct MemberAvatarsList: View {
                     name: member.name,
                     highlighted: selectedMemberId == member.id
                 )
-                .onTapGesture { selectedMemberId = member.id }
+                .onTapGesture {
+                    selectedMemberId = (selectedMemberId == member.id) ? nil : member.id
+                }
             }
         }
         .frame(height: 100)
@@ -34,8 +36,8 @@ struct MemberAvatarsList: View {
 #Preview {
     MemberAvatarsList(
         members: [
-            Member(id: UUID(), name: "Mom", emoji: "👩"),
-            Member(id: UUID(), name: "Ana", emoji: "👧"),
+            Member(id: UUID(), householdId: UUID(), name: "Mom", emoji: "👩"),
+            Member(id: UUID(), householdId: UUID(), name: "Ana", emoji: "👧"),
         ],
         selectedMemberId: .constant(nil)
     )

@@ -10,5 +10,11 @@ struct ChoreCompletion: Identifiable, Hashable, Sendable, Codable {
     let choreId: UUID
     let completedBy: UUID
     var completedAt: Date
-    var photoData: Data?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case choreId = "chore_id"
+        case completedBy = "completed_by"
+        case completedAt = "completed_at"
+    }
 }

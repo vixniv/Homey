@@ -37,11 +37,11 @@ struct Deadline: View {
 
             // Date + Time pills
             HStack(spacing: 12) {
-                DatePill(label: dateFormatter.string(from: selectedDate)) {
+                DatePill(label: dateFormatter.string(from: selectedDate), current: selectedDate) {
                     selectedDate = $0
                 }
 
-                TimePill(label: timeFormatter.string(from: selectedTime)) {
+                TimePill(label: timeFormatter.string(from: selectedTime), current: selectedTime) {
                     selectedTime = $0
                 }
             }
@@ -55,6 +55,7 @@ struct Deadline: View {
 
 private struct DatePill: View {
     let label: String
+    let current: Date
     let onSelect: (Date) -> Void
 
     @State private var showPicker = false
@@ -62,7 +63,7 @@ private struct DatePill: View {
 
     var body: some View {
         Button {
-            draft = Date()
+            draft = current
             showPicker = true
         } label: {
             Text(label)
@@ -92,6 +93,7 @@ private struct DatePill: View {
 
 private struct TimePill: View {
     let label: String
+    let current: Date
     let onSelect: (Date) -> Void
 
     @State private var showPicker = false
@@ -99,7 +101,7 @@ private struct TimePill: View {
 
     var body: some View {
         Button {
-            draft = Date()
+            draft = current
             showPicker = true
         } label: {
             Text(label)

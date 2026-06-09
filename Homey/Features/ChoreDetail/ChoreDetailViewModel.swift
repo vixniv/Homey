@@ -35,6 +35,7 @@ final class ChoreDetailViewModel {
 
     var state: TaskState {
         if chore.status == .done { return .done }
+        if chore.assigneeId == nil { return .available }   // unassigned is always grabbable
         if chore.dueDate < now { return .late }
         if chore.status == .inProgress { return .inProgress }
         return .available

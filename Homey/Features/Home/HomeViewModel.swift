@@ -92,6 +92,8 @@ final class HomeViewModel {
         let state: TaskState
         if chore.status == .done {
             state = .done
+        } else if chore.assigneeId == nil {
+            state = .available          // unassigned chores are always grabbable
         } else if chore.dueDate < now {
             state = .late
         } else if chore.status == .inProgress {

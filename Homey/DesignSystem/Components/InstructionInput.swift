@@ -13,7 +13,7 @@ struct InstructionInput: View {
             HStack(spacing: 4) {
                 Text("Instruction")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(Color(red: 0.1, green: 0.1, blue: 0.25))
+//                    .foregroundColor(Color.black)
                 Text("(Optional)")
                     .font(.system(size: 18, weight: .regular))
                     .foregroundColor(Color(red: 0.45, green: 0.45, blue: 0.55))
@@ -21,19 +21,17 @@ struct InstructionInput: View {
             .padding(.bottom, 10)
 
             ZStack(alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Color.white)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(Color(red: 0.88, green: 0.88, blue: 0.92), lineWidth: 1)
-                    )
-
                 TextEditor(text: $text)
                     .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(Color(red: 0.1, green: 0.1, blue: 0.25))
                     .scrollContentBackground(.hidden)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
+                    .background(Color.bgInput)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.gray.opacity(0.5), lineWidth: 0.5) // ← satu border tipis
+                    )
             }
             .frame(height: 110)
         }

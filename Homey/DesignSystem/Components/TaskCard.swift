@@ -80,7 +80,7 @@ struct TaskCard: View {
                     .frame(width: 45, height: 45)
                     .background(
                         Circle()
-                            .fill(Color.white)
+                            .fill(Color.bgInput)
                     )
                     .overlay(
                         Circle()
@@ -103,7 +103,7 @@ struct TaskCard: View {
                         .frame(width: 45, height: 45)
                         .background(
                             Circle()
-                                .fill(Color.white)
+                                .fill(Color.bgInput)
                         )
                         .overlay(
                             Circle()
@@ -118,7 +118,7 @@ struct TaskCard: View {
                     .frame(width: 45, height: 45)
                     .background(
                         Circle()
-                            .fill(Color.white)
+                            .fill(Color.bgInput)
                     )
                     .overlay(
                         Circle()
@@ -209,7 +209,7 @@ struct Avatar: View {
         ZStack {
             Circle()
                 .strokeBorder(Color.badgeYellow)
-                .background(Circle().fill(Color.white))
+                .background(Circle().fill(Color.bgInput))
                 .frame(width: 44, height: 44)
             Text(emoji)
                 .font(.system(size: 24))

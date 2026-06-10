@@ -13,18 +13,8 @@ struct DailyActivityChart: View {
         let value: Double
     }
     
-    let data: [DayData] = [
-        DayData(label: "Mon", value: 0.30),
-        DayData(label: "Tue", value: 0.55),
-        DayData(label: "Wed", value: 0.75),
-        DayData(label: "Thu", value: 0.35),
-        DayData(label: "Fri", value: 0.60),
-        DayData(label: "Sat", value: 0.70),
-        DayData(label: "Sun", value: 0.85),
-    ]
-    
-    // Today is Wednesday (index 2)
-    let todayIndex = 2
+    let data: [DayData]
+    let todayIndex: Int
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -59,7 +49,7 @@ struct DailyActivityChart: View {
             .padding(.top, 16)
         }
         .padding(20)
-        .background(Color(.white))
+        .background(Color(.statisticBg))
         .cornerRadius(20)
 //        .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 4)
     }
@@ -75,9 +65,17 @@ struct DailyActivityChart: View {
 
 struct DailyActivityChart_Previews: PreviewProvider {
     static var previews: some View {
-        DailyActivityChart()
-            .padding()
-            .previewLayout(.sizeThatFits)
-            .preferredColorScheme(.light)
+        DailyActivityChart(
+            data: [
+                .init(label: "Mon", value: 0.3), .init(label: "Tue", value: 0.55),
+                .init(label: "Wed", value: 0.75), .init(label: "Thu", value: 0.35),
+                .init(label: "Fri", value: 0.6), .init(label: "Sat", value: 0.7),
+                .init(label: "Sun", value: 0.85),
+            ],
+            todayIndex: 2
+        )
+        .padding()
+        .previewLayout(.sizeThatFits)
+        .preferredColorScheme(.light)
     }
 }

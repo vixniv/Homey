@@ -20,6 +20,8 @@ struct TextInputField: View {
             TextField("Enter Task Title Here", text: $choreTitle)
                 .padding(17)
                 .font(.system(size: 16, weight: .regular))
+                .background(Color.bgInput)
+                .clipShape(RoundedRectangle(cornerRadius: 30))
                 .overlay(
                     RoundedRectangle(cornerRadius: 30)
                         .stroke(color)

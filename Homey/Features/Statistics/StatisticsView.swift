@@ -2,80 +2,45 @@
 //  StatisticsView.swift
 //  Homey
 //
-//  Full statistics screen combining StatisticCard, DailyActivity,
-//  and MemberContribution components.
+//  Full statistics screen, driven by StatisticsViewModel.
 //
 
 import SwiftUI
 
 struct StatisticsView: View {
+    @State private var viewModel = StatisticsViewModel()
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    // MARK: - Statistic Cards Grid
                     LazyVGrid(
-                        columns: [
-                            GridItem(.flexible()),
-                            GridItem(.flexible())
-                        ],
+                        columns: [GridItem(.flexible()), GridItem(.flexible())],
                         spacing: 12
                     ) {
-                        StatisticCard(
-                            title: "Total Tasks",
-                            value: "56",
-                            subtitle: "+4 vs last week",
-                            trendValue: 4
-                        )
-
-                        StatisticCard(
-                            title: "Completion Rate",
-                            value: "85%",
-                            subtitle: "-4% vs last week",
-                            trendValue: -4
-                        )
-
-                        StatisticCard(
-                            title: "On Time",
-                            value: "45",
-                            subtitle: "of 50 task"
-                        )
-
-                        StatisticCard(
-                            title: "Overdue",
-                            value: "5",
-                            subtitle: nil,
-                            trendValue: nil,
-                            valueColor: .red
-                        )
+                        ForEach(viewModel.cards) { card in
+                            StatisticCard(
+                                title: card.title,
+                                value: card.value,
+                                subtitle: card.subtitle,
+                                trendValue: card.trendValue,
+                                valueColor: card.valueColor
+                            )
+                        }
                     }
                     .padding(.horizontal)
 
-                    // MARK: - Daily Activity Chart
-                    DailyActivityChart()
+                    DailyActivityChart(data: viewModel.dailyActivity, todayIndex: viewModel.todayIndex)
                         .padding(.horizontal)
 
-                    // MARK: - Member Contribution
-                    MemberContribution()
+                    MemberContribution(items: viewModel.contributions)
                 }
                 .padding(.vertical)
             }
             .background(Color(.systemGroupedBackground))
-//            .navigationTitle("Statistic")
-//            .navigationBarTitleDisplayMode(.inline)
-//            .toolbar {
-//                ToolbarItem(placement: .topBarLeading) {
-//                    Button {
-////                        dismiss()
-//                    } label: {
-//                        Image(systemName: "xmark")
-//                    }
-//                }
-//            }
-            .navigationToolbar(
-                title: "Statistics"
-            )
+            .navigationToolbar(title: "Statistics")
         }
+        .task { await viewModel.load() }
     }
 }
 

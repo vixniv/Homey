@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct NewHomeOnboardingView: View {
-    
+    @Environment(RootViewModel.self) private var rootModel
     @State private var isShowingNextPage = false
+    @State private var isShowingJoinPage = false
     
     var body: some View {
         ZStack {
@@ -39,17 +40,32 @@ struct NewHomeOnboardingView: View {
                 }
                 
                 Image(ImageResource.sadHomey)
-                PrimaryButton(title: "Start a new home", type: "secondary") {
+                PrimaryButton(title: "Start a new home", type: "primary") {
                     isShowingNextPage = true
                 }
                 .navigationDestination(isPresented: $isShowingNextPage) {
                     NewHomeNameFormView()
                 }
+                
+                PrimaryButton(title: "Join an existing home", type: "secondary") {
+                    isShowingJoinPage = true
+                }
+                .navigationDestination(isPresented: $isShowingJoinPage) {
+                    JoinHomeFormView()
+                }
+                
+                Button(action: {
+                    rootModel.signOut()
+                }) {
+                    Text("Sign Out")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.red)
+                }
+                .padding(.top, 16)
             }
             .padding()
         }
         .ignoresSafeArea()
-        
     }
 }
 

@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Dependencies
 
 // MARK: - Model
 
 struct HouseholdManageMember: Identifiable {
-    let id = UUID()
+    let id: UUID
     let name: String
 
     var initials: String {
@@ -22,17 +23,44 @@ struct HouseholdManageMember: Identifiable {
     }
 }
 
+@MainActor
+@Observable
+final class ManageMemberViewModel {
+    @ObservationIgnored @Dependency(\.householdStore) private var store
+
+    var members: [HouseholdManageMember] {
+        store.members.map { HouseholdManageMember(id: $0.id, name: $0.name) }
+    }
+
+    var inviteCode: String? {
+        guard let code = store.inviteCode, let expires = store.inviteExpiresAt else { return nil }
+        if expires < Date() { return nil }
+        return code
+    }
+
+    var isCodeExpired: Bool {
+        if store.inviteCode == nil { return false }
+        guard let expires = store.inviteExpiresAt else { return true }
+        return expires < Date()
+    }
+    
+    var timeRemaining: String? {
+        guard let expires = store.inviteExpiresAt, expires > Date() else { return nil }
+        let mins = Int(expires.timeIntervalSinceNow / 60)
+        return "Expires in \(mins)m"
+    }
+
+    func generateCode() async {
+        await store.generateInviteCode()
+    }
+}
+
 // MARK: - Main View
 
 struct ManageMemberView: View {
     @Environment(\.dismiss) private var dismiss
 
-    @State private var members: [HouseholdManageMember] = [
-        HouseholdManageMember(name: "Mom"),
-        HouseholdManageMember(name: "Ana"),
-        HouseholdManageMember(name: "Dad"),
-        HouseholdManageMember(name: "Ama")
-    ]
+    @State private var viewModel = ManageMemberViewModel()
 
     @State private var swipedMemberID: UUID? = nil
 
@@ -45,7 +73,7 @@ struct ManageMemberView: View {
                 // Member list
                 ScrollView {
                     VStack(spacing: 12) {
-                        ForEach(members) { member in
+                        ForEach(viewModel.members) { member in
                             MemberRowView(
                                 member: member,
                                 isSwipedOpen: swipedMemberID == member.id,
@@ -55,8 +83,8 @@ struct ManageMemberView: View {
                                     }
                                 },
                                 onDelete: {
-                                    withAnimation(.easeInOut(duration: 0.3)) {
-                                        members.removeAll { $0.id == member.id }
+                                    // TODO: Implement actual deletion logic with Supabase
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                         swipedMemberID = nil
                                     }
                                 }
@@ -80,26 +108,58 @@ struct ManageMemberView: View {
                 Divider()
                     .opacity(0)
 
-                // Invite buttons
-                VStack(spacing: 12) {
-                    Button(action: {}) {
-                        Text("Invite via QR code")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 52)
-                            .background(Color(hex: "#4AAEE8"))
-                            .clipShape(Capsule())
-                    }
-
-                    Button(action: {}) {
-                        Text("Invite via link")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color(UIColor.label))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 52)
-                            .background(Color(UIColor.secondarySystemGroupedBackground))
-                            .clipShape(Capsule())
+                // Invite Code Section
+                VStack(spacing: 16) {
+                    if let code = viewModel.inviteCode {
+                        VStack(spacing: 8) {
+                            Text("Invite Code")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.secondary)
+                            
+                            Text(code)
+                                .font(.system(size: 32, weight: .bold, design: .monospaced))
+                                .tracking(4)
+                                .foregroundColor(.primary)
+                            
+                            if let timeRemaining = viewModel.timeRemaining {
+                                Text(timeRemaining)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 8)
+                        
+                        Button {
+                            UIPasteboard.general.string = code
+                        } label: {
+                            Text("Copy Code")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 52)
+                                .background(Color(hex: "#4AAEE8"))
+                                .clipShape(Capsule())
+                        }
+                    } else {
+                        if viewModel.isCodeExpired {
+                            Text("Your previous invite code has expired.")
+                                .font(.system(size: 14))
+                                .foregroundColor(.red)
+                        }
+                        
+                        Button {
+                            Task {
+                                await viewModel.generateCode()
+                            }
+                        } label: {
+                            Text("Generate Invite Code")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 52)
+                                .background(Color(hex: "#4AAEE8"))
+                                .clipShape(Capsule())
+                        }
                     }
                 }
                 .padding(.horizontal, 16)

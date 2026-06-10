@@ -19,6 +19,8 @@ final class HouseholdStore {
 
     var householdId: UUID?
     var householdName = ""
+    var inviteCode: String?
+    var inviteExpiresAt: Date?
     var members: [Member] = []
     var chores: [Chore] = []
     var completions: [ChoreCompletion] = []
@@ -60,11 +62,27 @@ final class HouseholdStore {
             let household = try await householdTask
             householdId = household.id
             householdName = household.name
+            inviteCode = household.inviteCode
+            inviteExpiresAt = household.inviteExpiresAt
             members = try await membersTask
             currentMemberId = try await currentMemberTask
             chores = (try await choresTask).sorted { $0.dueDate < $1.dueDate }
             completions = try await completionsTask
             occurrences = try await occurrencesTask
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func generateInviteCode() async {
+        guard let id = householdId else { return }
+        isLoading = true
+        defer { isLoading = false }
+        errorMessage = nil
+        do {
+            let newCode = try await householdClient.generateInviteCode(householdId: id)
+            self.inviteCode = newCode
+            self.inviteExpiresAt = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
         } catch {
             errorMessage = error.localizedDescription
         }

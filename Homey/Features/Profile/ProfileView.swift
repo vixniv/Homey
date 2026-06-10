@@ -1,4 +1,6 @@
 import SwiftUI
+import Supabase
+import Dependencies
 
 // MARK: - Models
 
@@ -10,8 +12,11 @@ struct HouseholdMember: Identifiable {
 
 // MARK: - Profile View
 
+
 struct ProfileView: View {
+    @Environment(RootViewModel.self) private var rootModel
     @State private var viewModel = ProfileViewModel()
+    
     
     var body: some View {
         ScrollView {
@@ -41,6 +46,9 @@ struct ProfileView: View {
         .navigationToolbar(
             title: "Profile"
         )
+        .task {
+            await viewModel.load()
+        }
     }
     
     // MARK: - Avatar Section
@@ -113,7 +121,7 @@ struct ProfileView: View {
                             // Member avatars
                             HStack(spacing: 4) {
                                 ForEach(viewModel.members) { member in
-                                    MemberBadge(initials: String(member.name.prefix(2)).uppercased())
+                                    MemberBadge(initials: member.initials)
                                 }
                             }
                         }
@@ -182,7 +190,7 @@ struct ProfileView: View {
     
     private var signOutButton: some View {
         Button {
-            viewModel.signOut()
+            rootModel.signOut()
         } label: {
             HStack(spacing: 12) {
                 Image(systemName: "rectangle.portrait.and.arrow.right")
@@ -296,5 +304,6 @@ struct SettingsRow: View {
 #Preview {
     NavigationStack {
         ProfileView()
+            .environment(RootViewModel())
     }
 }

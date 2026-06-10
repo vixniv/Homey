@@ -151,14 +151,14 @@ struct ProfileView: View {
                 Divider().padding(.leading, 58)
                 
                 // Notification
-                NavigationLink(destination: NotificationView()) {
-                    SettingsRow(
-                        icon: "bell.fill",
-                        iconColor: .blue,
-                        title: "Notification",
-                        subtitle: "Reminders & alerts"
-                    )
-                }
+//                NavigationLink(destination: NotificationView()) {
+//                    SettingsRow(
+//                        icon: "bell.fill",
+//                        iconColor: .blue,
+//                        title: "Notification",
+//                        subtitle: "Reminders & alerts"
+//                    )
+//                }
             }
             .background(Color(.statisticBg))
             .clipShape(RoundedRectangle(cornerRadius: 14))

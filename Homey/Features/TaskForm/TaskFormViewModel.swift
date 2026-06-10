@@ -80,6 +80,25 @@ final class TaskFormViewModel {
                 status: assigneeId == nil ? .available : .inProgress
             )
             await store.create(chore)
+            let assigneeName = members.first(where: { $0.id == assigneeId })?.name
+            let creatorName = members.first(where: { $0.id == store.currentMemberId })?.name
+
+            NotificationManager.shared.sendTaskCreatedNotification(
+                taskTitle: title,
+                assigneeName: assigneeName,
+                creatorName: creatorName
+            )
+            if assigneeId == nil {
+                NotificationManager.shared.scheduleUpcomingNotification(
+                    taskTitle: title,
+                    dueDate: due
+                )
+            }
+            NotificationManager.shared.scheduleReminderNotification(
+                taskTitle: title,
+                dueDate: due
+            )
+            return true
 
         case let .edit(original):
             var updated = original

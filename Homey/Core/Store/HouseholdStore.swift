@@ -208,13 +208,16 @@ final class HouseholdStore {
         }
         let occSnap = occurrences
         let compSnap = completions
+        // Attribute the completion to the occurrence's day (not `now`), so finishing a
+        // past/future day this week doesn't bleed "done" onto today's occurrence.
+        let stamp = calendar.startOfDay(for: occurrenceDate)
         let existingAssignee = occurrences.first { $0.choreId == choreId && $0.occurrenceDate == Self.dayKey(occurrenceDate) }?.assigneeId
         let occ = makeOverride(choreId: choreId, day: occurrenceDate, status: .done, assigneeId: existingAssignee ?? memberId)
         applyOverride(occ)
-        completions.append(ChoreCompletion(id: UUID(), choreId: choreId, completedBy: memberId, completedAt: date))
+        completions.append(ChoreCompletion(id: UUID(), choreId: choreId, completedBy: memberId, completedAt: stamp))
         do {
             try await choreClient.upsertOccurrence(occ)
-            try await choreClient.finish(choreId: choreId, by: memberId, at: date)
+            try await choreClient.finish(choreId: choreId, by: memberId, at: stamp)
         } catch {
             occurrences = occSnap; completions = compSnap; errorMessage = error.localizedDescription
         }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NewHomeOnboardingView: View {
+    @Environment(RootViewModel.self) private var rootModel
     @State private var isShowingNextPage = false
     @State private var isShowingJoinPage = false
     
@@ -52,11 +53,19 @@ struct NewHomeOnboardingView: View {
                 .navigationDestination(isPresented: $isShowingJoinPage) {
                     JoinHomeFormView()
                 }
+                
+                Button(action: {
+                    rootModel.signOut()
+                }) {
+                    Text("Sign Out")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.red)
+                }
+                .padding(.top, 16)
             }
             .padding()
         }
         .ignoresSafeArea()
-        
     }
 }
 

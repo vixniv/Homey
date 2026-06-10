@@ -1,31 +1,44 @@
 import Dependencies
 import Foundation
 import Observation
+import Supabase
+import SwiftUI
 
 @MainActor
 @Observable
 final class ProfileViewModel {
     @ObservationIgnored @Dependency(\.householdStore) private var store
 
-    // Sample data
-    let totalTasks: Int = 56
-    let daysStreak: Int = 365
-    let minutesSpent: Int = 1023
-    
+    var userEmail: String = ""
+
     var userName: String {
-        let name = store.members.first(where: { $0.id == store.currentMemberId })?.name ?? store.householdName
-        return name.isEmpty ? "Unknown" : name
+        guard let currentId = store.currentMemberId else { return "Loading..." }
+        return store.members.first { $0.id == currentId }?.name ?? "Unknown"
     }
     
-    var userEmail: String {
-        "\(userName.lowercased())@gmail.com"
+    var totalTasks: Int {
+        guard let currentId = store.currentMemberId else { return 0 }
+        return store.completions.filter { $0.completedBy == currentId }.count
     }
-    
-    var members: [Member] {
-        store.members
+
+    var daysStreak: Int {
+        return 0 // Placeholder
     }
-    
-    func signOut() {
-        // sign out action
+
+    var minutesSpent: Int {
+        return totalTasks * 15 // Placeholder
+    }
+
+    var members: [HouseholdMember] {
+        store.members.map { member in
+            let initials = String(member.name.prefix(2)).uppercased()
+            return HouseholdMember(initials: initials, color: .blue)
+        }
+    }
+
+    func load() async {
+        if let session = try? await SupabaseClientProvider.shared.auth.session {
+            self.userEmail = session.user.email ?? ""
+        }
     }
 }

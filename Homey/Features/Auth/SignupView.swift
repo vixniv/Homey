@@ -11,8 +11,6 @@ import Supabase
 struct SignupView: View {
     
     @State private var emailStr = ""
-    @State private var nameStr = ""
-    @State private var emojiStr = "👤"
     @State private var passwordStr = ""
     @State private var confirmPasswordStr = ""
     @State private var isLoading = false
@@ -28,20 +26,7 @@ struct SignupView: View {
                     .multilineTextAlignment(.center)
                     .padding(.top, 50)
                     .fixedSize(horizontal: false, vertical: true)
-                
-                VStack(alignment: .leading) {
-                    Text("Name")
-                    TextField("Your Name", text: $nameStr)
-                        .textFieldStyle()
-                }
-                .padding(.bottom)
-                
-                VStack(alignment: .leading) {
-                    Text("Emoji")
-                    TextField("👤", text: $emojiStr)
-                        .textFieldStyle()
-                }
-                .padding(.bottom)
+
                 
                 VStack(alignment: .leading) {
                     Text("Email")
@@ -73,22 +58,6 @@ struct SignupView: View {
                             await signUp()
                         }
                     }
-                }
-                
-                HStack {
-                    Rectangle()
-                        .frame(width: 100, height: 0.5)
-                        .opacity(0.5)
-                    Text("Or continue with")
-                        .padding(.horizontal, 5)
-                    Rectangle()
-                        .frame(width: 100, height: 0.5)
-                        .opacity(0.5)
-                }
-                .padding(.vertical)
-                
-                AuthButtonGoogle {
-                    
                 }
                 
                 AuthButtonApple {
@@ -127,12 +96,6 @@ struct SignupView: View {
     }
 
     private func signUp() async {
-        guard !nameStr.isEmpty else {
-            isSuccess = false
-            alertMessage = "Please enter your name."
-            return
-        }
-
         guard !emailStr.isEmpty, !passwordStr.isEmpty, !confirmPasswordStr.isEmpty else {
             isSuccess = false
             alertMessage = "Please fill in all fields."
@@ -153,8 +116,8 @@ struct SignupView: View {
                 email: emailStr,
                 password: passwordStr,
                 data: [
-                    "name": .string(nameStr),
-                    "emoji": .string(emojiStr.isEmpty ? "👤" : emojiStr)
+                    "name": .string("New Member"),
+                    "emoji": .string("👤")
                 ]
             )
             isSuccess = true

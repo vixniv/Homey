@@ -28,16 +28,6 @@ struct SignInView: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
-            PrimaryButton(title: "Try Demo") {
-                onDemo()
-            }
-            .padding(.top, 8)
-
-            Text("Explore a ready-made household with members and chores.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-
             VStack(alignment: .leading) {
                 Text("Email")
                 TextField("Enter your email here", text: $emailStr)
@@ -65,22 +55,6 @@ struct SignInView: View {
                         await signIn()
                     }
                 }
-            }
-
-            HStack {
-                Rectangle()
-                    .frame(width: 100, height: 0.5)
-                    .opacity(0.5)
-                Text("Or continue with")
-                    .padding(.horizontal, 5)
-                Rectangle()
-                    .frame(width: 100, height: 0.5)
-                    .opacity(0.5)
-            }
-            .padding(.vertical)
-
-            AuthButtonGoogle {
-
             }
 
             AuthButtonApple {

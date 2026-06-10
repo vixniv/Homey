@@ -15,7 +15,7 @@ struct RootView: View {
                 OnboardingView(onDemo: { model.signInDemo() })
             case .onboarding:
                 NavigationStack {
-                    NewHomeOnboardingView()
+                    ProfileSetupView()
                 }
             case .signedIn:
                 MainScene()

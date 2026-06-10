@@ -13,6 +13,10 @@ struct RootView: View {
             switch model.route {
             case .auth:
                 OnboardingView(onDemo: { model.signInDemo() })
+            case .onboarding:
+                NavigationStack {
+                    NewHomeOnboardingView()
+                }
             case .signedIn:
                 MainScene()
             }

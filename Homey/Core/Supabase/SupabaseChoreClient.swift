@@ -10,10 +10,19 @@ import Supabase
 extension ChoreClient: DependencyKey {
     static let liveValue = ChoreClient(
         allChores: {
-            try await SupabaseClientProvider.shared
+            let session = try await SupabaseClientProvider.shared.auth.session
+            let member: Member = try await SupabaseClientProvider.shared
+                .from("members")
+                .select()
+                .eq("id", value: session.user.id.uuidString)
+                .single()
+                .execute()
+                .value
+
+            return try await SupabaseClientProvider.shared
                 .from("chores")
                 .select()
-                .eq("household_id", value: DemoConfig.householdId.uuidString)
+                .eq("household_id", value: member.householdId.uuidString)
                 .order("due_date")
                 .execute()
                 .value

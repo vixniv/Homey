@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import Supabase
 
 struct NewHomeNameFormView: View {
+    @Environment(RootViewModel.self) private var rootModel
     @State private var homeName: String = ""
-    
-    @State private var isShowingNextPage = false
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     
     var body: some View {
         VStack {
@@ -26,24 +28,73 @@ struct NewHomeNameFormView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar{
             ToolbarItem(placement: .topBarTrailing) {
-                PrimaryButton(title: "Next") {
-                    isShowingNextPage = true
+                if isLoading {
+                    ProgressView()
+                } else {
+                    PrimaryButton(title: "Next") {
+                        Task {
+                            await createHome()
+                        }
+                    }
                 }
             }
         }
         .padding()
-        .onSubmit {
-            // TODO: Review — wire up home creation (createHome was undefined on main)
+        .alert(isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { _ in errorMessage = nil }
+        )) {
+            Alert(title: Text("Error"), message: Text(errorMessage ?? ""), dismissButton: .default(Text("OK")))
+        }
+    }
+
+    private func createHome() async {
+        guard !homeName.isEmpty else {
+            errorMessage = "Please enter a home name."
+            return
+        }
+
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            let session = try await SupabaseClientProvider.shared.auth.session
+            let user = session.user
+            let metadata = user.userMetadata
             
+            let name = metadata["name"]?.stringValue ?? "New Member"
+            let emoji = metadata["emoji"]?.stringValue ?? "👤"
+
+            let newHousehold = Household(id: UUID(), name: homeName)
+            try await SupabaseClientProvider.shared
+                .from("households")
+                .insert(newHousehold)
+                .execute()
+
+            let newMember = Member(
+                id: user.id,
+                householdId: newHousehold.id,
+                name: name,
+                emoji: emoji,
+                role: .admin
+            )
+            try await SupabaseClientProvider.shared
+                .from("members")
+                .insert(newMember)
+                .execute()
+
+            rootModel.completeOnboarding()
+        } catch {
+            errorMessage = error.localizedDescription
         }
-        .navigationDestination(isPresented: $isShowingNextPage) {
-            InviteHomeMembersView()
-        }
+
+        isLoading = false
     }
 }
 
 #Preview {
     NavigationStack {
         NewHomeNameFormView()
+            .environment(RootViewModel())
     }
 }

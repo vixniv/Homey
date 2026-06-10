@@ -7,7 +7,7 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var viewModel = HomeViewModel()
-    @State private var selectedChore: Chore?
+    @State private var selectedOccurrence: SelectedOccurrence?
 
     var body: some View {
         List {
@@ -62,7 +62,7 @@ struct HomeView: View {
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        selectedChore = viewModel.chore(for: task)
+                        selectedOccurrence = viewModel.selection(for: task)
                     }
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
@@ -116,9 +116,9 @@ struct HomeView: View {
                 }
             }
         }
-        .fullScreenCover(item: $selectedChore) { chore in
+        .fullScreenCover(item: $selectedOccurrence) { selection in
             NavigationStack {
-                DetailChoreView(chore: chore)
+                DetailChoreView(chore: selection.chore)
             }
         }
         .onAppear {

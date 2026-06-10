@@ -13,6 +13,7 @@ enum DemoData {
         var members: [Member]
         var chores: [Chore]
         var completions: [ChoreCompletion]
+        var occurrences: [ChoreOccurrence] = []
         var currentMemberId: UUID
     }
 

@@ -1,3 +1,4 @@
+import Dependencies
 import SwiftUI
 
 // MARK: - Models
@@ -11,19 +12,25 @@ struct HouseholdMember: Identifiable {
 // MARK: - Profile View
 
 struct ProfileView: View {
+    @Dependency(\.householdStore) var store
     
     // Sample data — replace with your real data source / ViewModel
     let totalTasks: Int = 56
     let daysStreak: Int = 365
     let minutesSpent: Int = 1023
-    let userName: String = "Mom"
-    let userEmail: String = "mom@gmail.com"
-    let members: [HouseholdMember] = [
-        HouseholdMember(initials: "MC", color: .blue),
-        HouseholdMember(initials: "AN", color: .blue),
-        HouseholdMember(initials: "DA", color: .blue),
-        HouseholdMember(initials: "AM", color: .blue),
-    ]
+    
+    var userName: String {
+        let name = store.members.first(where: { $0.id == store.currentMemberId })?.name ?? store.householdName
+        return name.isEmpty ? "Unknown" : name
+    }
+    
+    var userEmail: String {
+        "\(userName.lowercased())@gmail.com"
+    }
+    
+    var members: [Member] {
+        store.members
+    }
     
     var body: some View {
         ScrollView {
@@ -125,7 +132,7 @@ struct ProfileView: View {
                             // Member avatars
                             HStack(spacing: 4) {
                                 ForEach(members) { member in
-                                    MemberBadge(initials: member.initials)
+                                    MemberBadge(initials: String(member.name.prefix(2)).uppercased())
                                 }
                             }
                         }

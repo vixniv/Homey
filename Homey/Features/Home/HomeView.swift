@@ -118,7 +118,7 @@ struct HomeView: View {
         }
         .fullScreenCover(item: $selectedOccurrence) { selection in
             NavigationStack {
-                DetailChoreView(chore: selection.chore)
+                DetailChoreView(chore: selection.chore, date: selection.date)
             }
         }
         .onAppear {

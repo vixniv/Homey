@@ -13,6 +13,7 @@ struct StatisticCard: View {
     var value: String
     var subtitle: String? = nil
     var trendValue: Double? = nil
+    var valueColor: Color = .primary
     
     private var trendColor: Color {
         if let v = trendValue {
@@ -28,6 +29,7 @@ struct StatisticCard: View {
 
             Text(value)
                 .font(.title.bold())
+                .foregroundStyle(valueColor)
 
             if let sub = subtitle {
                 Text(sub)
@@ -38,7 +40,7 @@ struct StatisticCard: View {
             }
         }
         .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: 15))
     }

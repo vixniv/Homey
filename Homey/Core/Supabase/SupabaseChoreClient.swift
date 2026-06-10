@@ -34,14 +34,14 @@ extension ChoreClient: DependencyKey {
         grab: { choreId, memberId in
             _ = try await SupabaseClientProvider.shared
                 .from("chores")
-                .update(["assignee_id": memberId.uuidString, "status": "in_progress"])
+                .update(GrabPatch(assigneeId: memberId.uuidString, status: "in_progress"))
                 .eq("id", value: choreId.uuidString)
                 .execute()
         },
         finish: { choreId, memberId, date in
             _ = try await SupabaseClientProvider.shared
                 .from("chores")
-                .update(["status": "done"])
+                .update(StatusPatch(status: "done"))
                 .eq("id", value: choreId.uuidString)
                 .execute()
             let completion = ChoreCompletion(
@@ -83,4 +83,25 @@ extension ChoreClient: DependencyKey {
                 .execute()
         }
     )
+}
+
+// MARK: - Partial-update payloads
+//
+// PostgREST's `.update(_:)` takes `some Encodable`. Passing a plain Swift
+// dictionary literal (inferred as `[String: String]`) faults inside the SDK's
+// encoder (EXC_BAD_ACCESS), so partial updates go through typed structs whose
+// CodingKeys map to the snake_case column names.
+
+private struct GrabPatch: Encodable {
+    let assigneeId: String
+    let status: String
+
+    enum CodingKeys: String, CodingKey {
+        case assigneeId = "assignee_id"
+        case status
+    }
+}
+
+private struct StatusPatch: Encodable {
+    let status: String
 }

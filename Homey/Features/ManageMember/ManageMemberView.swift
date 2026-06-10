@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Dependencies
 
 // MARK: - Model
 
 struct HouseholdManageMember: Identifiable {
-    let id = UUID()
+    let id: UUID
     let name: String
 
     var initials: String {
@@ -22,17 +23,22 @@ struct HouseholdManageMember: Identifiable {
     }
 }
 
+@MainActor
+@Observable
+final class ManageMemberViewModel {
+    @ObservationIgnored @Dependency(\.householdStore) private var store
+
+    var members: [HouseholdManageMember] {
+        store.members.map { HouseholdManageMember(id: $0.id, name: $0.name) }
+    }
+}
+
 // MARK: - Main View
 
 struct ManageMemberView: View {
     @Environment(\.dismiss) private var dismiss
 
-    @State private var members: [HouseholdManageMember] = [
-        HouseholdManageMember(name: "Mom"),
-        HouseholdManageMember(name: "Ana"),
-        HouseholdManageMember(name: "Dad"),
-        HouseholdManageMember(name: "Ama")
-    ]
+    @State private var viewModel = ManageMemberViewModel()
 
     @State private var swipedMemberID: UUID? = nil
 
@@ -45,7 +51,7 @@ struct ManageMemberView: View {
                 // Member list
                 ScrollView {
                     VStack(spacing: 12) {
-                        ForEach(members) { member in
+                        ForEach(viewModel.members) { member in
                             MemberRowView(
                                 member: member,
                                 isSwipedOpen: swipedMemberID == member.id,
@@ -55,8 +61,8 @@ struct ManageMemberView: View {
                                     }
                                 },
                                 onDelete: {
-                                    withAnimation(.easeInOut(duration: 0.3)) {
-                                        members.removeAll { $0.id == member.id }
+                                    // TODO: Implement actual deletion logic with Supabase
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                         swipedMemberID = nil
                                     }
                                 }

@@ -1,5 +1,6 @@
 import SwiftUI
 import Supabase
+import Dependencies
 
 // MARK: - Models
 
@@ -11,21 +12,49 @@ struct HouseholdMember: Identifiable {
 
 // MARK: - Profile View
 
+@MainActor
+@Observable
+final class ProfileViewModel {
+    @ObservationIgnored @Dependency(\.householdStore) private var store
+
+    var userEmail: String = ""
+
+    var userName: String {
+        guard let currentId = store.currentMemberId else { return "Loading..." }
+        return store.members.first { $0.id == currentId }?.name ?? "Unknown"
+    }
+    
+    var totalTasks: Int {
+        guard let currentId = store.currentMemberId else { return 0 }
+        return store.completions.filter { $0.completedBy == currentId }.count
+    }
+
+    var daysStreak: Int {
+        return 0 // Placeholder
+    }
+
+    var minutesSpent: Int {
+        return totalTasks * 15 // Placeholder
+    }
+
+    var members: [HouseholdMember] {
+        store.members.map { member in
+            let initials = String(member.name.prefix(2)).uppercased()
+            return HouseholdMember(initials: initials, color: .blue)
+        }
+    }
+
+    func load() async {
+        if let session = try? await SupabaseClientProvider.shared.auth.session {
+            self.userEmail = session.user.email ?? ""
+        }
+    }
+}
+
 struct ProfileView: View {
     @Environment(RootViewModel.self) private var rootModel
+    @State private var viewModel = ProfileViewModel()
     
-    // Sample data — replace with your real data source / ViewModel
-    let totalTasks: Int = 56
-    let daysStreak: Int = 365
-    let minutesSpent: Int = 1023
-    let userName: String = "Mom"
-    let userEmail: String = "mom@gmail.com"
-    let members: [HouseholdMember] = [
-        HouseholdMember(initials: "MC", color: .blue),
-        HouseholdMember(initials: "AN", color: .blue),
-        HouseholdMember(initials: "DA", color: .blue),
-        HouseholdMember(initials: "AM", color: .blue),
-    ]
     
     var body: some View {
         ScrollView {
@@ -55,6 +84,9 @@ struct ProfileView: View {
         .navigationToolbar(
             title: "Profile"
         )
+        .task {
+            await viewModel.load()
+        }
     }
     
     // MARK: - Avatar Section
@@ -67,7 +99,7 @@ struct ProfileView: View {
                     .fill(Color.blue.opacity(0.15))
                     .frame(width: 90, height: 90)
                     .overlay(
-                        Text(String(userName.prefix(2)).uppercased())
+                        Text(String(viewModel.userName.prefix(2)).uppercased())
                             .font(.system(size: 28, weight: .semibold))
                             .foregroundColor(.blue)
                     )
@@ -85,10 +117,10 @@ struct ProfileView: View {
                     .offset(x: 4, y: 4)
             }
             
-            Text(userName)
+            Text(viewModel.userName)
                 .font(.system(size: 20, weight: .bold))
             
-            Text(userEmail)
+            Text(viewModel.userEmail)
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
         }
@@ -98,9 +130,9 @@ struct ProfileView: View {
     
     private var statsRow: some View {
         HStack(spacing: 12) {
-            StatCard(value: "\(totalTasks)", label: "Total Tasks")
-            StatCard(value: "🔥 \(daysStreak)", label: "Days Streak")
-            StatCard(value: "\(minutesSpent)", label: "Minutes Spent")
+            StatCard(value: "\(viewModel.totalTasks)", label: "Total Tasks")
+            StatCard(value: "🔥 \(viewModel.daysStreak)", label: "Days Streak")
+            StatCard(value: "\(viewModel.minutesSpent)", label: "Minutes Spent")
         }
     }
     
@@ -126,7 +158,7 @@ struct ProfileView: View {
                             
                             // Member avatars
                             HStack(spacing: 4) {
-                                ForEach(members) { member in
+                                ForEach(viewModel.members) { member in
                                     MemberBadge(initials: member.initials)
                                 }
                             }

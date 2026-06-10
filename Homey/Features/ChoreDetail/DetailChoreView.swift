@@ -10,8 +10,8 @@ struct DetailChoreView: View {
     @State private var viewModel: ChoreDetailViewModel
     @State private var isEditing = false
 
-    init(chore: Chore) {
-        _viewModel = State(initialValue: ChoreDetailViewModel(chore: chore))
+    init(chore: Chore, date: Date? = nil) {
+        _viewModel = State(initialValue: ChoreDetailViewModel(chore: chore, date: date))
     }
 
     var body: some View {

@@ -13,6 +13,7 @@ enum DemoData {
         var members: [Member]
         var chores: [Chore]
         var completions: [ChoreCompletion]
+        var occurrences: [ChoreOccurrence] = []
         var currentMemberId: UUID
     }
 
@@ -46,6 +47,7 @@ enum DemoData {
             Chore(id: UUID(), householdId: householdId, title: "Take out trash", assigneeId: nil, dueDate: date(1, 9), status: .available),
             Chore(id: UUID(), householdId: householdId, title: "Water the plants", assigneeId: momId, dueDate: date(1, 8), status: .available),
             Chore(id: UUID(), householdId: householdId, title: "Grocery shopping", assigneeId: momId, dueDate: date(2, 11), status: .available),
+            Chore(id: UUID(), householdId: householdId, title: "Water the plants", assigneeId: momId, dueDate: date(-30, 8), recurrence: .weekly, recurrenceDays: [1, 3, 5], status: .available),
         ]
         let completions = [
             ChoreCompletion(id: UUID(), choreId: chores[2].id, completedBy: dadId, completedAt: date(-1, 20))

@@ -14,6 +14,7 @@ actor InMemoryStore {
     private(set) var members: [Member]
     private(set) var chores: [Chore]
     private(set) var completions: [ChoreCompletion]
+    private(set) var occurrences: [ChoreOccurrence]
     let currentMemberId: UUID
 
     init(seed: DemoData.Seed) {
@@ -21,6 +22,7 @@ actor InMemoryStore {
         self.members = seed.members
         self.chores = seed.chores
         self.completions = seed.completions
+        self.occurrences = seed.occurrences
         self.currentMemberId = seed.currentMemberId
     }
 
@@ -66,6 +68,18 @@ actor InMemoryStore {
     func update(_ chore: Chore) {
         guard let index = chores.firstIndex(where: { $0.id == chore.id }) else { return }
         chores[index] = chore
+    }
+
+    func allOccurrences() -> [ChoreOccurrence] { occurrences }
+
+    func upsertOccurrence(_ occurrence: ChoreOccurrence) {
+        if let i = occurrences.firstIndex(where: {
+            $0.choreId == occurrence.choreId && $0.occurrenceDate == occurrence.occurrenceDate
+        }) {
+            occurrences[i] = occurrence
+        } else {
+            occurrences.append(occurrence)
+        }
     }
 }
 

@@ -7,7 +7,7 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var viewModel = HomeViewModel()
-    @State private var selectedChore: Chore?
+    @State private var selectedOccurrence: SelectedOccurrence?
 
     var body: some View {
         List {
@@ -44,7 +44,14 @@ struct HomeView: View {
             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
             .listRowBackground(Color.clear)
 
-            if viewModel.rows.isEmpty {
+            if viewModel.isLoading && viewModel.rows.isEmpty {
+                ForEach(0..<4, id: \.self) { _ in
+                    SkeletonCard()
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                        .listRowBackground(Color.clear)
+                }
+            } else if viewModel.rows.isEmpty {
                 ContentUnavailableView(
                     "No chores",
                     systemImage: "checkmark.circle",
@@ -62,7 +69,7 @@ struct HomeView: View {
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        selectedChore = viewModel.chore(for: task)
+                        selectedOccurrence = viewModel.selection(for: task)
                     }
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
@@ -116,9 +123,9 @@ struct HomeView: View {
                 }
             }
         }
-        .fullScreenCover(item: $selectedChore) { chore in
+        .fullScreenCover(item: $selectedOccurrence) { selection in
             NavigationStack {
-                DetailChoreView(chore: chore)
+                DetailChoreView(chore: selection.chore, date: selection.date)
             }
         }
         .onAppear {

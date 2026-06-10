@@ -12,7 +12,9 @@ enum TaskState {
 // MARK: - task model
 
 struct TaskItem: Identifiable {
-    let id: UUID
+    let id: String                 // occurrence id (choreId, or "choreId-yyyy-MM-dd")
+    let choreId: UUID
+    let occurrenceDate: Date?      // nil = one-off chore
     var title: String
     var dueLabel: String
     var state: TaskState = .available
@@ -276,10 +278,10 @@ struct CameraButton: View {
 
 struct TaskCardDemoView: View {
     @State private var tasks: [TaskItem] = [
-        TaskItem(id: UUID(), title: "Wash dishes", dueLabel: "Before 5:00 A.M", state: .available),
-        TaskItem(id: UUID(), title: "Clean bathroom", dueLabel: "Before 5:00 A.M", state: .inProgress, assigneeInitials: "MO"),
-        TaskItem(id: UUID(), title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .done, assigneeInitials: "AN"),
-        TaskItem(id: UUID(), title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .late, assigneeInitials: "AN")
+        TaskItem(id: "1", choreId: UUID(), occurrenceDate: nil, title: "Wash dishes", dueLabel: "Before 5:00 A.M", state: .available),
+        TaskItem(id: "2", choreId: UUID(), occurrenceDate: nil, title: "Clean bathroom", dueLabel: "Before 5:00 A.M", state: .inProgress, assigneeInitials: "MO"),
+        TaskItem(id: "3", choreId: UUID(), occurrenceDate: nil, title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .done, assigneeInitials: "AN"),
+        TaskItem(id: "4", choreId: UUID(), occurrenceDate: nil, title: "Mop the floor", dueLabel: "Before 5:00 A.M", state: .late, assigneeInitials: "AN")
     ]
 
     var body: some View {

@@ -68,6 +68,19 @@ extension ChoreClient: DependencyKey {
                 .update(chore)
                 .eq("id", value: chore.id.uuidString)
                 .execute()
+        },
+        allOccurrences: {
+            try await SupabaseClientProvider.shared
+                .from("chore_occurrences")
+                .select()
+                .execute()
+                .value
+        },
+        upsertOccurrence: { occurrence in
+            _ = try await SupabaseClientProvider.shared
+                .from("chore_occurrences")
+                .upsert(occurrence, onConflict: "chore_id,occurrence_date")
+                .execute()
         }
     )
 }

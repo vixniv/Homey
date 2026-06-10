@@ -114,6 +114,19 @@ struct HomeView: View {
                 NavigationLink(destination: NotificationView()) {
                     Image(systemName: "bell")
                         .symbolRenderingMode(.hierarchical)
+                        .overlay(alignment: .topTrailing) {
+                                let count = NotificationStore.shared.unreadCount
+                                if count > 0 {
+                                    Text("\(count)")
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.white)
+                                        .padding(4)
+                                        .background(.red)
+                                        .clipShape(Circle())
+                                        .offset(x: 6, y: -6)
+                                }
+                        }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {

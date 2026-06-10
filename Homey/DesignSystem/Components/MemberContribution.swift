@@ -40,7 +40,7 @@ struct MemberContribution: View {
             }
         }
         .padding(20)
-        .background(Color.white)
+        .background(Color.statisticBg)
         .cornerRadius(20)
         .shadow(color: Color.black.opacity(0.06), radius: 10, x: 0, y: 4)
         .padding(.horizontal)
@@ -89,6 +89,7 @@ struct MemberRow: View {
                 }
             }
             .frame(height: 8)
+            
         }
     }
 }

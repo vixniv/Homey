@@ -89,14 +89,14 @@ struct TaskCard: View {
                 
             case .done:
                 HStack{
-                    Image(systemName: "camera.badge.clock")
-                        .foregroundStyle(Color.textGreen)
-                        .frame(width: 35, height: 35)
-                        .background(
-                            Circle()
-                                .stroke(Color.textGreen, lineWidth: 1)
-                            )
-                        .padding(.horizontal, 3)
+//                    Image(systemName: "camera.badge.clock")
+//                        .foregroundStyle(Color.textGreen)
+//                        .frame(width: 35, height: 35)
+//                        .background(
+//                            Circle()
+//                                .stroke(Color.textGreen, lineWidth: 1)
+//                            )
+//                        .padding(.horizontal, 3)
                     Text(task.assigneeInitials)
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.black)

@@ -49,7 +49,7 @@ struct DailyActivityChart: View {
             .padding(.top, 16)
         }
         .padding(20)
-        .background(Color(.white))
+        .background(Color(.statisticBg))
         .cornerRadius(20)
 //        .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 4)
     }

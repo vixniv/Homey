@@ -1,4 +1,5 @@
 import SwiftUI
+import Supabase
 
 // MARK: - Models
 
@@ -11,6 +12,7 @@ struct HouseholdMember: Identifiable {
 // MARK: - Profile View
 
 struct ProfileView: View {
+    @Environment(RootViewModel.self) private var rootModel
     
     // Sample data — replace with your real data source / ViewModel
     let totalTasks: Int = 56
@@ -194,7 +196,7 @@ struct ProfileView: View {
     
     private var signOutButton: some View {
         Button {
-            // sign out action
+            rootModel.signOut()
         } label: {
             HStack(spacing: 12) {
                 Image(systemName: "rectangle.portrait.and.arrow.right")
@@ -308,5 +310,6 @@ struct SettingsRow: View {
 #Preview {
     NavigationStack {
         ProfileView()
+            .environment(RootViewModel())
     }
 }

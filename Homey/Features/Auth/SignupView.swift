@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import Supabase
 
 struct SignupView: View {
     
     @State private var emailStr = ""
     @State private var passwordStr = ""
     @State private var confirmPasswordStr = ""
+    @State private var isLoading = false
+    @State private var alertMessage: String?
+    @State private var isSuccess = false
     
     var body: some View {
         VStack {
@@ -31,20 +35,27 @@ struct SignupView: View {
             
             VStack(alignment: .leading) {
                 Text("Password")
-                TextField("Enter your password here", text: $passwordStr)
+                SecureField("Enter your password here", text: $passwordStr)
                     .textFieldStyle()
             }
             .padding(.bottom)
             
             VStack(alignment: .leading){
                 Text("Confirm password")
-                TextField("Confirm your password here", text: $confirmPasswordStr)
+                SecureField("Confirm your password here", text: $confirmPasswordStr)
                     .textFieldStyle()
             }
             .padding(.bottom, 32)
             
-            PrimaryButton(title: "Sign Up") {
-                // TODO: Sign up logic
+            if isLoading {
+                ProgressView()
+                    .padding()
+            } else {
+                PrimaryButton(title: "Sign Up") {
+                    Task {
+                        await signUp()
+                    }
+                }
             }
             
             HStack {
@@ -85,6 +96,44 @@ struct SignupView: View {
         }
         .padding()
         .navigationBarBackButtonHidden()
+        .alert(isPresented: Binding(
+            get: { alertMessage != nil },
+            set: { _ in alertMessage = nil }
+        )) {
+            Alert(
+                title: Text(isSuccess ? "Success" : "Sign Up Failed"),
+                message: Text(alertMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+    }
+
+    private func signUp() async {
+        guard !emailStr.isEmpty, !passwordStr.isEmpty, !confirmPasswordStr.isEmpty else {
+            isSuccess = false
+            alertMessage = "Please fill in all fields."
+            return
+        }
+        
+        guard passwordStr == confirmPasswordStr else {
+            isSuccess = false
+            alertMessage = "Passwords do not match."
+            return
+        }
+
+        isLoading = true
+        alertMessage = nil
+
+        do {
+            try await SupabaseClientProvider.shared.auth.signUp(email: emailStr, password: passwordStr)
+            isSuccess = true
+            alertMessage = "Account created successfully! You can now sign in."
+        } catch {
+            isSuccess = false
+            alertMessage = error.localizedDescription
+        }
+
+        isLoading = false
     }
 }
 

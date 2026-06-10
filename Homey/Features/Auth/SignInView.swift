@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import Supabase
 
 struct SignInView: View {
     /// Demo entry, injected by the auth gate. Defaults to a no-op so the
@@ -13,6 +14,8 @@ struct SignInView: View {
     @State private var emailStr = ""
     @State private var passwordStr = ""
     @State private var rememberMe = false
+    @State private var isLoading = false
+    @State private var errorMessage: String?
 
     var body: some View {
         VStack(spacing: 16) {
@@ -43,7 +46,7 @@ struct SignInView: View {
 
             VStack(alignment: .leading) {
                 Text("Password")
-                TextField("Enter your password here", text: $passwordStr)
+                SecureField("Enter your password here", text: $passwordStr)
                     .textFieldStyle()
             }
 
@@ -53,8 +56,15 @@ struct SignInView: View {
                 Spacer()
             }
 
-            PrimaryButton(title: "Sign in") {
-                // TODO: Sign in logic
+            if isLoading {
+                ProgressView()
+                    .padding()
+            } else {
+                PrimaryButton(title: "Sign in") {
+                    Task {
+                        await signIn()
+                    }
+                }
             }
 
             HStack {
@@ -94,6 +104,31 @@ struct SignInView: View {
         }
         .padding()
         .navigationBarBackButtonHidden()
+        .alert(isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { _ in errorMessage = nil }
+        )) {
+            Alert(title: Text("Sign In Failed"), message: Text(errorMessage ?? ""), dismissButton: .default(Text("OK")))
+        }
+    }
+
+    private func signIn() async {
+        guard !emailStr.isEmpty, !passwordStr.isEmpty else {
+            errorMessage = "Please enter both email and password."
+            return
+        }
+
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            try await SupabaseClientProvider.shared.auth.signIn(email: emailStr, password: passwordStr)
+            // On success, RootViewModel's authStateChanges listener will automatically handle routing.
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+
+        isLoading = false
     }
 }
 

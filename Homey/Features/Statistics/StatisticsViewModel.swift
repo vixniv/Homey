@@ -12,6 +12,8 @@ import Observation
 import SwiftUI
 
 /// One presentational stat card the view renders.
+/// Named `StatCardData` (not `StatCard`) to avoid colliding with the existing
+/// `struct StatCard` in `ProfileView.swift`.
 struct StatCardData: Identifiable {
     let id: String
     let title: String

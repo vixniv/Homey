@@ -24,6 +24,9 @@ struct TaskFormView: View {
                 )
                 .padding(.bottom, 10)
 
+                recurrenceSection
+                    .padding(.bottom, 10)
+
                 InstructionInput(text: $viewModel.notes)
                     .padding(.bottom, 10)
 
@@ -72,6 +75,28 @@ struct TaskFormView: View {
             }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private var recurrenceSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Repeat")
+                .font(.system(size: 18, weight: .semibold))
+                .padding(.horizontal)
+
+            Picker("Repeat", selection: $viewModel.recurrence) {
+                Text("Once").tag(Recurrence.once)
+                Text("Daily").tag(Recurrence.daily)
+                Text("Weekly").tag(Recurrence.weekly)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+
+            if viewModel.recurrence == .weekly {
+                DaySelector(selected: $viewModel.recurrenceDays)
+                    .padding(.horizontal)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func save() {

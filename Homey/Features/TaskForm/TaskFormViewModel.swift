@@ -1,6 +1,7 @@
 //
 //  TaskFormViewModel.swift
 //  Homey
+//
 
 import Dependencies
 import Foundation
@@ -22,6 +23,8 @@ final class TaskFormViewModel {
     var time = Date()
     var notes = ""
     var assigneeId: UUID?
+    var recurrence: Recurrence = .once
+    var recurrenceDays: Set<Int> = []      // 0=Sun … 6=Sat
 
     init(mode: Mode = .create) {
         self.mode = mode
@@ -31,6 +34,8 @@ final class TaskFormViewModel {
             assigneeId = chore.assigneeId
             date = chore.dueDate
             time = chore.dueDate
+            recurrence = chore.recurrence
+            recurrenceDays = Set(chore.recurrenceDays)
         }
     }
 
@@ -41,32 +46,28 @@ final class TaskFormViewModel {
         set { store.errorMessage = newValue }
     }
 
-    var isEditing: Bool {
-        if case .edit = mode { return true }
-        return false
-    }
-
+    var isEditing: Bool { if case .edit = mode { return true }; return false }
     var navTitle: String { isEditing ? "Edit Task" : "Add Task" }
     var ctaTitle: String { isEditing ? "Save" : "Create Task" }
 
     var canSave: Bool {
-        !title.trimmingCharacters(in: .whitespaces).isEmpty
+        guard !title.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
+        if recurrence == .weekly && recurrenceDays.isEmpty { return false }
+        return true
     }
 
     func load() async {
         if store.members.isEmpty { await store.load() }
     }
 
-    /// Returns true on success so the view can dismiss.
     func save() async -> Bool {
         guard canSave else { return false }
         let due = combine(date: date, time: time)
+        let days = recurrence == .weekly ? recurrenceDays.sorted() : []
 
         switch mode {
         case .create:
-            guard let householdId = store.householdId ?? store.members.first?.householdId else {
-                return false
-            }
+            guard let householdId = store.householdId ?? store.members.first?.householdId else { return false }
             let chore = Chore(
                 id: UUID(),
                 householdId: householdId,
@@ -74,7 +75,8 @@ final class TaskFormViewModel {
                 notes: notes,
                 assigneeId: assigneeId,
                 dueDate: due,
-                recurrence: .once,
+                recurrence: recurrence,
+                recurrenceDays: days,
                 status: assigneeId == nil ? .available : .inProgress
             )
             await store.create(chore)
@@ -85,7 +87,8 @@ final class TaskFormViewModel {
             updated.notes = notes
             updated.assigneeId = assigneeId
             updated.dueDate = due
-            // status and recurrence are preserved intentionally.
+            updated.recurrence = recurrence
+            updated.recurrenceDays = days
             await store.update(updated)
         }
 
@@ -96,12 +99,8 @@ final class TaskFormViewModel {
         let calendar = Calendar.current
         let day = calendar.dateComponents([.year, .month, .day], from: date)
         let clock = calendar.dateComponents([.hour, .minute], from: time)
-        var components = DateComponents()
-        components.year = day.year
-        components.month = day.month
-        components.day = day.day
-        components.hour = clock.hour
-        components.minute = clock.minute
-        return calendar.date(from: components) ?? date
+        var c = DateComponents()
+        c.year = day.year; c.month = day.month; c.day = day.day; c.hour = clock.hour; c.minute = clock.minute
+        return calendar.date(from: c) ?? date
     }
 }

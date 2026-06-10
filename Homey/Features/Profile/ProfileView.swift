@@ -1,4 +1,3 @@
-import Dependencies
 import SwiftUI
 
 // MARK: - Models
@@ -12,25 +11,7 @@ struct HouseholdMember: Identifiable {
 // MARK: - Profile View
 
 struct ProfileView: View {
-    @Dependency(\.householdStore) var store
-    
-    // Sample data — replace with your real data source / ViewModel
-    let totalTasks: Int = 56
-    let daysStreak: Int = 365
-    let minutesSpent: Int = 1023
-    
-    var userName: String {
-        let name = store.members.first(where: { $0.id == store.currentMemberId })?.name ?? store.householdName
-        return name.isEmpty ? "Unknown" : name
-    }
-    
-    var userEmail: String {
-        "\(userName.lowercased())@gmail.com"
-    }
-    
-    var members: [Member] {
-        store.members
-    }
+    @State private var viewModel = ProfileViewModel()
     
     var body: some View {
         ScrollView {
@@ -72,7 +53,7 @@ struct ProfileView: View {
                     .fill(Color.blue.opacity(0.15))
                     .frame(width: 90, height: 90)
                     .overlay(
-                        Text(String(userName.prefix(2)).uppercased())
+                        Text(String(viewModel.userName.prefix(2)).uppercased())
                             .font(.system(size: 28, weight: .semibold))
                             .foregroundColor(.blue)
                     )
@@ -90,10 +71,10 @@ struct ProfileView: View {
                     .offset(x: 4, y: 4)
             }
             
-            Text(userName)
+            Text(viewModel.userName)
                 .font(.system(size: 20, weight: .bold))
             
-            Text(userEmail)
+            Text(viewModel.userEmail)
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
         }
@@ -103,9 +84,9 @@ struct ProfileView: View {
     
     private var statsRow: some View {
         HStack(spacing: 12) {
-            StatCard(value: "\(totalTasks)", label: "Total Tasks")
-            StatCard(value: "🔥 \(daysStreak)", label: "Days Streak")
-            StatCard(value: "\(minutesSpent)", label: "Minutes Spent")
+            StatCard(value: "\(viewModel.totalTasks)", label: "Total Tasks")
+            StatCard(value: "🔥 \(viewModel.daysStreak)", label: "Days Streak")
+            StatCard(value: "\(viewModel.minutesSpent)", label: "Minutes Spent")
         }
     }
     
@@ -131,7 +112,7 @@ struct ProfileView: View {
                             
                             // Member avatars
                             HStack(spacing: 4) {
-                                ForEach(members) { member in
+                                ForEach(viewModel.members) { member in
                                     MemberBadge(initials: String(member.name.prefix(2)).uppercased())
                                 }
                             }
@@ -201,7 +182,7 @@ struct ProfileView: View {
     
     private var signOutButton: some View {
         Button {
-            // sign out action
+            viewModel.signOut()
         } label: {
             HStack(spacing: 12) {
                 Image(systemName: "rectangle.portrait.and.arrow.right")

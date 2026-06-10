@@ -143,7 +143,7 @@ struct ProfileView: View {
                 Divider().padding(.leading, 58)
                 
                 // Statistics
-                NavigationLink(destination: Text("Statistics")) {
+                NavigationLink(destination: StatisticsView()) {
                     SettingsRow(
                         icon: "chart.bar.fill",
                         iconColor: .blue,

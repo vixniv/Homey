@@ -37,9 +37,10 @@ struct OnboardingView: View {
                         .foregroundColor(.white)
                         .cornerRadius(30)
                         .padding(.horizontal, 20)
+                        .padding(.top, 100)
                 }
+                Spacer()
             }
-            .padding(.bottom, 100)
         }
     }
 }

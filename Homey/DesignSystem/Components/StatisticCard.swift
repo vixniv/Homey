@@ -41,7 +41,7 @@ struct StatisticCard: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(.white)
+        .background(.statisticBg)
         .clipShape(RoundedRectangle(cornerRadius: 15))
     }
 }

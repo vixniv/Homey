@@ -22,7 +22,7 @@ struct AuthButtonGoogle: View {
                 Text("Continue with Google")
             }
             .font(.system(size: 18))
-            .foregroundColor(.primary)
+            .foregroundColor(.black)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
         }

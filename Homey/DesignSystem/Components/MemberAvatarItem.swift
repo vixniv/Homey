@@ -14,7 +14,7 @@ struct MemberAvatarItem: View {
         VStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .fill(Color.white)
+                    .fill(Color.bgInput)
                     .frame(width: 50, height: 50)
                     .overlay(
                         Circle()

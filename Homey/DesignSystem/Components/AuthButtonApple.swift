@@ -21,7 +21,7 @@ struct AuthButtonApple: View {
                 Text("Continue with apple")
             }
             .font(.system(size: 18))
-            .foregroundColor(.primary)
+            .foregroundColor(.black)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
         }

@@ -164,7 +164,7 @@ struct ProfileView: View {
                     )
                 }
             }
-            .background(Color(.systemBackground))
+            .background(Color(.statisticBg))
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
         }
@@ -184,7 +184,7 @@ struct ProfileView: View {
                     subtitle: nil
                 )
             }
-            .background(Color(.systemBackground))
+            .background(Color(.statisticBg))
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
         }
@@ -210,7 +210,7 @@ struct ProfileView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
-            .background(Color(.systemBackground))
+            .background(Color(.statisticBg))
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
         }
@@ -237,7 +237,7 @@ struct StatCard: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 14)
-        .background(Color(.systemBackground))
+        .background(Color(.statisticBg))
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
     }

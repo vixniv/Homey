@@ -33,7 +33,7 @@ struct Deadline: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Date and deadline")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(Color(red: 0.10, green: 0.10, blue: 0.22))
+//                .foregroundColor(Color(red: 0.10, green: 0.10, blue: 0.22))
 
             // Date + Time pills
             HStack(spacing: 12) {

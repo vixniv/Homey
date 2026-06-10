@@ -13,6 +13,7 @@ struct Chore: Identifiable, Hashable, Sendable, Codable {
     var assigneeId: UUID?
     var dueDate: Date
     var recurrence: Recurrence = .once
+    var recurrenceDays: [Int] = []   // 0=Sun … 6=Sat, used when recurrence == .weekly
     var status: ChoreStatus = .available
 
     enum CodingKeys: String, CodingKey {
@@ -21,7 +22,9 @@ struct Chore: Identifiable, Hashable, Sendable, Codable {
         case title, notes
         case assigneeId = "assignee_id"
         case dueDate = "due_date"
-        case recurrence, status
+        case recurrence
+        case recurrenceDays = "recurrence_days"
+        case status
     }
 
     func encode(to encoder: Encoder) throws {
@@ -33,6 +36,7 @@ struct Chore: Identifiable, Hashable, Sendable, Codable {
         try container.encode(assigneeId, forKey: .assigneeId)
         try container.encode(dueDate, forKey: .dueDate)
         try container.encode(recurrence, forKey: .recurrence)
+        try container.encode(recurrenceDays, forKey: .recurrenceDays)
         try container.encode(status, forKey: .status)
     }
 }

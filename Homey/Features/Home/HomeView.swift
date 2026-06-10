@@ -44,7 +44,14 @@ struct HomeView: View {
             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
             .listRowBackground(Color.clear)
 
-            if viewModel.rows.isEmpty {
+            if viewModel.isLoading && viewModel.rows.isEmpty {
+                ForEach(0..<4, id: \.self) { _ in
+                    SkeletonCard()
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                        .listRowBackground(Color.clear)
+                }
+            } else if viewModel.rows.isEmpty {
                 ContentUnavailableView(
                     "No chores",
                     systemImage: "checkmark.circle",

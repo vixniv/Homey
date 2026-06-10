@@ -16,15 +16,10 @@ struct MemberContributionItem: Identifiable {
 
 struct MemberContribution: View {
     
-    let members: [MemberContributionItem] = [
-        MemberContributionItem(name: "Mom", initials: "MO", taskCount: 12),
-        MemberContributionItem(name: "Dad", initials: "DA", taskCount: 8),
-        MemberContributionItem(name: "Ana", initials: "AN", taskCount: 6),
-        MemberContributionItem(name: "Ama", initials: "AM", taskCount: 4),
-    ]
-    
+    let items: [MemberContributionItem]
+
     var maxTask: Int {
-        members.map { $0.taskCount }.max() ?? 1
+        max(1, items.map { $0.taskCount }.max() ?? 1)
     }
     
     var body: some View {
@@ -39,7 +34,7 @@ struct MemberContribution: View {
             }
             
             VStack(spacing: 16) {
-                ForEach(members) { member in
+                ForEach(items) { member in
                     MemberRow(member: member, maxTask: maxTask)
                 }
             }
@@ -99,7 +94,12 @@ struct MemberRow: View {
 }
 
 #Preview {
-    MemberContribution()
-        .padding()
-        .background(Color(.systemGroupedBackground))
+    MemberContribution(items: [
+        MemberContributionItem(name: "Mom", initials: "MO", taskCount: 12),
+        MemberContributionItem(name: "Dad", initials: "DA", taskCount: 8),
+        MemberContributionItem(name: "Ana", initials: "AN", taskCount: 6),
+        MemberContributionItem(name: "Ama", initials: "AM", taskCount: 4),
+    ])
+    .padding()
+    .background(Color(.systemGroupedBackground))
 }

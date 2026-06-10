@@ -12,6 +12,8 @@ struct HouseholdClient: Sendable {
     var household: @Sendable () async throws -> Household
     var members: @Sendable () async throws -> [Member]
     var currentMemberId: @Sendable () async throws -> UUID
+    var generateInviteCode: @Sendable (_ householdId: UUID) async throws -> String
+    var joinHousehold: @Sendable (_ code: String) async throws -> Void
 }
 
 extension HouseholdClient {
@@ -31,7 +33,9 @@ extension HouseholdClient {
             currentMemberId: {
                 @Dependency(\.homeyStore) var store
                 return await store.currentMemberId
-            }
+            },
+            generateInviteCode: { _ in "123456" },
+            joinHousehold: { _ in }
         )
     }
 }

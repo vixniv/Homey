@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct NewHomeOnboardingView: View {
-    
     @State private var isShowingNextPage = false
+    @State private var isShowingJoinPage = false
     
     var body: some View {
         ZStack {
@@ -39,11 +39,18 @@ struct NewHomeOnboardingView: View {
                 }
                 
                 Image(ImageResource.sadHomey)
-                PrimaryButton(title: "Start a new home", type: "secondary") {
+                PrimaryButton(title: "Start a new home", type: "primary") {
                     isShowingNextPage = true
                 }
                 .navigationDestination(isPresented: $isShowingNextPage) {
                     NewHomeNameFormView()
+                }
+                
+                PrimaryButton(title: "Join an existing home", type: "secondary") {
+                    isShowingJoinPage = true
+                }
+                .navigationDestination(isPresented: $isShowingJoinPage) {
+                    JoinHomeFormView()
                 }
             }
             .padding()

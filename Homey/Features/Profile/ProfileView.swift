@@ -31,9 +31,6 @@ struct ProfileView: View {
                 // MARK: Household Section
                 householdSection
 
-                // MARK: Account & Settings
-                accountSection
-
                 // MARK: Sign Out
                 signOutButton
 
@@ -55,33 +52,17 @@ struct ProfileView: View {
     
     private var avatarSection: some View {
         VStack(spacing: 8) {
-            ZStack(alignment: .bottomTrailing) {
-                // Avatar circle
-                Circle()
-                    .fill(Color.blue.opacity(0.15))
-                    .frame(width: 90, height: 90)
-                    .overlay(
-                        Text(String(viewModel.userName.prefix(2)).uppercased())
-                            .font(.system(size: 28, weight: .semibold))
-                            .foregroundColor(.blue)
-                    )
-                
-                // Camera badge
-                Circle()
-                    .fill(Color(.systemBackground))
-                    .frame(width: 28, height: 28)
-                    .overlay(
-                        Image(systemName: "camera.fill")
-                            .font(.system(size: 13))
-                            .foregroundColor(.primary)
-                    )
-                    .shadow(color: .black.opacity(0.12), radius: 4, x: 0, y: 2)
-                    .offset(x: 4, y: 4)
-            }
-            
+            Circle()
+                .fill(Color.blue.opacity(0.15))
+                .frame(width: 90, height: 90)
+                .overlay(
+                    Text(viewModel.userEmoji)
+                        .font(.system(size: 40))
+                )
+
             Text(viewModel.userName)
                 .font(.system(size: 20, weight: .bold))
-            
+
             Text(viewModel.userEmail)
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
@@ -93,8 +74,8 @@ struct ProfileView: View {
     private var statsRow: some View {
         HStack(spacing: 12) {
             StatCard(value: "\(viewModel.totalTasks)", label: "Total Tasks")
-            StatCard(value: "🔥 \(viewModel.daysStreak)", label: "Days Streak")
-            StatCard(value: "\(viewModel.minutesSpent)", label: "Minutes Spent")
+            StatCard(value: "🔥 \(viewModel.daysStreak)", label: "Day Streak")
+            StatCard(value: "\(viewModel.tasksThisWeek)", label: "This Week")
         }
     }
     
@@ -159,26 +140,6 @@ struct ProfileView: View {
 //                        subtitle: "Reminders & alerts"
 //                    )
 //                }
-            }
-            .background(Color(.statisticBg))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
-        }
-    }
-    
-    // MARK: - Account & Settings
-    
-    private var accountSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "Account & Settings")
-            
-            NavigationLink(destination: Text("Change Password")) {
-                SettingsRow(
-                    icon: "lock.fill",
-                    iconColor: .blue,
-                    title: "Change Password",
-                    subtitle: nil
-                )
             }
             .background(Color(.statisticBg))
             .clipShape(RoundedRectangle(cornerRadius: 14))

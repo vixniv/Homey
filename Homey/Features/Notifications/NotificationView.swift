@@ -17,8 +17,12 @@ struct NotificationView: View {
     
     var body: some View {
         ScrollView {
-            SegmentedControl(selectedIndex: $selected, options: ["All", "Unread"])
-                .padding()
+            Picker("Filter", selection: $selected) {
+                Text("All").tag(0)
+                Text("Unread").tag(1)
+            }
+            .pickerStyle(.segmented)
+            .padding()
             
             if store.items.isEmpty {
                 VStack(spacing: 12) {
